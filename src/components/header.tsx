@@ -3,16 +3,17 @@ import React from 'react';
 import logo from '../logo.png';
 import { HeartOutlined, UserOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 
 const Header: React.FC = () => {
-
+    const navigate = useNavigate();
     const onFavoriteButtonClick = () => {
 
     }
 
     const onUserButtonClick = () => {
-
+    navigate('/login');
     }
 
     const onAddAdvertButtonClick = () => {
