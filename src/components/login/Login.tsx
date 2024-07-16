@@ -6,20 +6,23 @@ import BackButton from '../common-components/BackButton';
 import { Button, Checkbox, Divider, Form, Input } from 'antd';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { storageService } from '../../services/storangeService';
+import { observer } from 'mobx-react';
+import user from '../../stores/UserStore'
 
-export const Login: React.FC = () => {
+export const Login: React.FC = observer(() => {
     const [remember, setRemember] = useState<boolean>(false);
     const navigate = useNavigate()
-    
+
     const onFinish = async (loginModel: LoginModel) => {
         const responce = await accountService.login(loginModel);
-       if (responce.status === 200) {
-            if (remember){
+        if (responce.status === 200) {
+            if (remember) {
                 storageService.saveTokens(responce.data.accessToken);
             }
-            else{
+            else {
                 storageService.setTemporalyTokens(responce.data.accessToken)
             }
+            user.setUserData(responce.data.accessToken)
             navigate('/')
         }
     }
@@ -70,7 +73,7 @@ export const Login: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item>
-                        <Checkbox onChange={(e:CheckboxChangeEvent)=>setRemember(e.target.checked)}>Запам'ятати мене</Checkbox>
+                        <Checkbox onChange={(e: CheckboxChangeEvent) => setRemember(e.target.checked)}>Запам'ятати мене</Checkbox>
                     </Form.Item>
                     <div className='buttons-block'>
                         <Button type="primary" htmlType="submit">
@@ -85,7 +88,5 @@ export const Login: React.FC = () => {
             </div>
 
         </>
-
-
     )
-}
+})

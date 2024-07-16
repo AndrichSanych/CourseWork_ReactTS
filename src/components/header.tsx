@@ -4,16 +4,20 @@ import logo from '../logo.png';
 import { HeartOutlined, UserOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { observer } from 'mobx-react';
+import user from '../stores/UserStore'
 
 
-const Header: React.FC = () => {
+const Header: React.FC = observer(() => {
     const navigate = useNavigate();
     const onFavoriteButtonClick = () => {
 
     }
 
     const onUserButtonClick = () => {
-    navigate('/login');
+        if (!user.isAuthorized) {
+            navigate('/login');
+        }
     }
 
     const onAddAdvertButtonClick = () => {
@@ -29,11 +33,11 @@ const Header: React.FC = () => {
                         <UserOutlined />
                         <span>Ваш профіль</span>
                     </div>
-                    <Button  onClick={onAddAdvertButtonClick} size='large'>Додати оголошення</Button>
+                    <Button onClick={onAddAdvertButtonClick} size='large'>Додати оголошення</Button>
                 </div>
             </div>
         </header>
     );
-};
+});
 
 export default Header;
