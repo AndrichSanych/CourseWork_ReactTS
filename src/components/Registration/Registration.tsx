@@ -1,7 +1,6 @@
 import { Button, DatePicker, Divider, Form, Input, message } from 'antd'
-import React, { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import '../Registration/Registration.css'
+import './Registration.css'
 import { accountService } from '../../services/accountService'
 import BackButton from '../common-components/BackButton'
 import { UserRegisterModel } from '../../models/UserRegisterModel'
