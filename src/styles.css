@@ -23,6 +23,7 @@ body {
     flex: 1;
     padding: 20px;
     min-height: 69vh;
+    width: 100%;
   }
   
   footer {
@@ -30,5 +31,8 @@ body {
     color: white;
     padding: 10px;
     text-align: center;
+  }
+  .w-75{
+    width: 75%;
   }
   
