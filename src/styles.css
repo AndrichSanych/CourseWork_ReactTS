@@ -16,12 +16,14 @@ body {
     background-color: #333;
     color: white;
     padding: 10px;
-    text-align: center;
+    text-align: center;  
   }
   
   main {
     flex: 1;
     padding: 20px;
+    min-height: 88.7vh;
+    width: 100%;
   }
   
   footer {
@@ -30,4 +32,24 @@ body {
     padding: 10px;
     text-align: center;
   }
+  .w-75{
+    width: 75%;
+  }
+
+  .user-profile-button,
+  .favourite-button{
+    font-size: 24px;
+    color:white;
+  }
+  .user-profile-button span{
+    font-size: 17px;
+  }
+
+  
+  .user-profile-button:hover,
+  .favourite-button:hover{
+    color: gray;
+    cursor: pointer;
+  }
+
   

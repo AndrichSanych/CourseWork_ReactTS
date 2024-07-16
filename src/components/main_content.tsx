@@ -1,11 +1,11 @@
 // src/components/MainContent.tsx
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 
 const MainContent: React.FC = () => {
     return (
         <main>
-            <h2>Main Content Area</h2>
-            {/* Add your main content here */}
+             <Outlet />
         </main>
     );
 };
