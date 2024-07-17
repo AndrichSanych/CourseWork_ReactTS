@@ -1,7 +1,7 @@
 // src/components/Header.tsx
 import React, { ReactNode, useEffect, useState } from 'react';
 import logo from '../logo.png';
-import { DownOutlined, HeartOutlined, LogoutOutlined, UserAddOutlined, UserOutlined } from '@ant-design/icons';
+import { DownOutlined, FlagOutlined, HeartOutlined, LogoutOutlined, UserAddOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Dropdown } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react';
@@ -60,12 +60,12 @@ const Header: React.FC = observer(() => {
         },
         
         {
-            label: <Link to="registration">
-                <Button type="link">Hовий адмін</Button>
+            label: <Link to="useradverts">
+                <Button type="link">Оголошення</Button>
             </Link>,
             key: '2',
-            icon: <UserAddOutlined className='fs-6' />,
-            users: ['Admin']
+            icon: <FlagOutlined  className='fs-6' />,
+            users: ['User']
         },
         {
             label: <Button onClick={logout} type="link">Вийти</Button>,
