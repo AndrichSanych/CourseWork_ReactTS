@@ -1,21 +1,18 @@
 /* eslint-disable no-lone-blocks */
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { message } from 'antd'
-//import { storageService } from '../services/StorageService';
-//import { accountService } from '../services/AccountService';
-
+import { storageService } from '../services/storangeService';
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_HOST
-export const SetupInterceptors = (clearStore:Function|null) => {
+export const SetupInterceptors = (clearStore:Function) => {
     axios.interceptors.request.use(
         async (config: InternalAxiosRequestConfig) => {
             if (config.headers) {
-               // config.headers['Authorization'] = `Bearer ${storageService.getAccessToken()}`;
+                config.headers['Authorization'] = `Bearer ${storageService.getAccessToken()}`;
               }
             return config
           },
         async (error) => {
-    
           message.error(`${error.status} ${error.message}`)
           return Promise.reject(error);
     });
@@ -27,8 +24,8 @@ export const SetupInterceptors = (clearStore:Function|null) => {
       switch (status){
         
         case 401: {
-           // storageService.removeTokens();
-           // clearStore();
+            storageService.removeTokens();
+            clearStore();
             (window.location as Location).href = '/login';
           }
         break;
@@ -51,6 +48,6 @@ export const SetupInterceptors = (clearStore:Function|null) => {
           return Promise.reject(error);
         }
       }
-    }
+   }
   );
 }

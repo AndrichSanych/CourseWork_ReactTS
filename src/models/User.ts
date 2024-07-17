@@ -8,4 +8,5 @@ export interface IUser{
     roles:string[]
     exp:string
     iss:string
+    avatar:string
 }

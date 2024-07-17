@@ -2,7 +2,7 @@ import React from 'react';
 import './styles.css';
 import Layout from './components/layout';
 import { Route, Routes } from 'react-router-dom';
-import { Registration } from '../src/components/Registration/Registration';
+import { Registration } from '../src/components/registration/Registration';
 import { Login } from './components/login/Login';
 
 const App: React.FC = () => {

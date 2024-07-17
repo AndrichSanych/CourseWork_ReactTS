@@ -15,6 +15,7 @@ class UserStore {
     get email(): string { return this.user?.email || '' };
     get phoneNumber(): string { return this.user?.phoneNumber || '' };
     get roles(): string[] { return this.user?.roles || [] };
+    get avatar(): string { return this.user?.avatar || '' };
     get isAdmin(): boolean { return this.user?.roles.includes('Admin') || false };
     get isAuthorized(): boolean { return this.user ? true : false };
     setUserData(token: string) {
@@ -30,6 +31,7 @@ class UserStore {
                 roles: data['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
                 birthdate: new Date(data['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/dateofbirth']).toISOString(),
                 phoneNumber: data['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/homephone'] || '',
+                avatar: data['http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor'] || ''
             }
         }
     };

@@ -5,4 +5,5 @@ export interface UserRegisterModel{
     email:string
     phoneNumber:string
     password:string
+    avatarFile:File|null
 }
