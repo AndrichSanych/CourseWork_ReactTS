@@ -1,7 +1,7 @@
 // src/components/Header.tsx
 import React, { ReactNode, useEffect, useState } from 'react';
 import logo from '../logo.png';
-import { DownOutlined, FlagOutlined, HeartOutlined, LogoutOutlined, UserAddOutlined, UserOutlined } from '@ant-design/icons';
+import { DownOutlined, FlagOutlined, HeartOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Dropdown } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react';
@@ -46,10 +46,6 @@ const Header: React.FC = observer(() => {
         }
     }
 
-    const onAddAdvertButtonClick = () => {
-
-    }
-
     const items: MenuItem[] = [
         {
             label:<Link to="account">
@@ -81,7 +77,7 @@ const Header: React.FC = observer(() => {
             <div className='w-75 mx-auto d-flex  justify-content-between align-items-center'>
                 <img style={{ height: 40, width: 70 }} src={logo} alt='logo' />
                 <div className=' d-flex gap-lg-5'>
-                    <HeartOutlined className='favourite-button' onClick={onFavoriteButtonClick} />
+                    <HeartOutlined className='favourite-button' onClick={()=>navigate('/favorites')} />
                     {(user.isAuthorized &&
                         <Dropdown
                             menu={{ items: userMenuItems }}
@@ -97,7 +93,7 @@ const Header: React.FC = observer(() => {
                             <UserOutlined />
                             <span>Ваш профіль</span>
                         </div>}
-                    <Button onClick={onAddAdvertButtonClick} size='large'>Додати оголошення</Button>
+                    <Button onClick={()=>navigate('/create-advert')} size='large'>Додати оголошення</Button>
                 </div>
             </div>
         </header>
