@@ -23,7 +23,6 @@ body {
     flex: 1;
     padding: 20px;
     min-height: 88.7vh;
-    width: 100%;
   }
   
   footer {
@@ -50,6 +49,21 @@ body {
   .favourite-button:hover{
     color: gray;
     cursor: pointer;
+  }
+
+  .close{
+    position:absolute;
+    top:5%;
+    right: 5%;
+    z-index: 1;
+    font-size: 22px;
+    color: red;
+    cursor: pointer;
+  }
+
+  .close:hover{
+    color:rgb(200, 45, 45);
+    scale: 1.3;
   }
 
   

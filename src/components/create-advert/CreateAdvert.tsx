@@ -4,6 +4,7 @@ import { Image } from 'antd';
 import Dragger from 'antd/es/upload/Dragger';
 import { InboxOutlined } from '@ant-design/icons';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import SortedImage from '../common-components/SortedImage';
 
 const reorder = (list: UploadFile[], startIndex: number, endIndex: number) => {
   const result = Array.from(list);
@@ -21,7 +22,7 @@ const getBase64 = (file: File): Promise<string> =>
   });
 const CreateAdvert: React.FC = () => {
   const [files, setFiles] = useState<UploadFile[]>([]);
-
+ 
   const props = {
     showUploadList: false,
     name: 'file',
@@ -41,29 +42,26 @@ const CreateAdvert: React.FC = () => {
   };
 
   const onDragEnd = (result: any) => {
-    // dropped outside the list
     if (!result.destination) {
       return;
     }
-
     setFiles(reorder(
       files,
       result.source.index,
       result.destination.index
     ));
-
-
   }
-  const grid = 8;
-  const getItemStyle = (isDragging: boolean, draggableStyle: any) => ({
-    // some basic styles to make the items look a bit nicer
-    userSelect: 'none',
-    padding: 15,
-    margin: `5px`,
-    // change background colour if dragging
-    background: isDragging ? 'darkgrey' : 'grey',
 
-    // styles we need to apply on draggables
+  const deleteImage = (uid:string) =>{
+      setFiles(files.filter(x=>x.uid !== uid))
+  }
+
+  const getItemStyle = (isDragging: boolean, draggableStyle: any) => ({
+    "borderRadius": "10px",
+    userSelect: 'none',
+    padding: 10,
+    margin: `5px`,
+    background: isDragging ? 'darkgrey' : 'grey',
     ...draggableStyle,
   });
 
@@ -71,7 +69,6 @@ const CreateAdvert: React.FC = () => {
     "borderRadius": "10px",
     background: isDraggingOver ? 'lightblue' : 'lightgrey',
     display: 'flex',
-    //"flexWrap": "wrap",
     padding: 15,
     overflow: 'auto',
   });
@@ -79,7 +76,7 @@ const CreateAdvert: React.FC = () => {
 
   return (
     <div className='d-flex flex-column gap-2 border border-1 rounded-2 p-2'>
-      <Dragger {...props}>
+      <Dragger {...props} fileList={files}>
         <p className="ant-upload-drag-icon">
           <InboxOutlined />
         </p>
@@ -90,7 +87,7 @@ const CreateAdvert: React.FC = () => {
         </p>
       </Dragger>
       {files.length>0&&
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext  onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable" direction="horizontal">
           {(provided, snapshot) => (
             <div
@@ -110,16 +107,7 @@ const CreateAdvert: React.FC = () => {
                         provided.draggableProps.style
                       )}
                     >
-                      <div className='border border-1 rounded-2 p-1'>
-                        <Image
-                          className='rounded-2'
-                          alt={item.uid}
-                          src={item.url || (item.preview as string)}
-                          preview={true}
-                          width={250}
-                          style={{objectFit:"cover",aspectRatio:"16/10"}}
-                        />
-                      </div>
+                      <SortedImage item={item} deleteHandler={deleteImage}/>
                     </div>
                   )}
                 </Draggable>
