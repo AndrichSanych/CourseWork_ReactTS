@@ -1,11 +1,13 @@
 import { jwtDecode } from "jwt-decode";
 import { IUser } from "../models/User";
 import { makeAutoObservable } from "mobx"
+import { storageService } from "../services/storangeService";
 
 class UserStore {
     user: IUser | undefined;
 
     constructor() {
+        this.setUserData(storageService.getAccessToken() || '');
         makeAutoObservable(this)
     }
     get id(): string { return this.user?.id || '' };

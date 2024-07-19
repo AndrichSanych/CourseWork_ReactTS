@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { GetProp, UploadFile, UploadProps } from 'antd';
+import type { UploadFile } from 'antd';
 import { Image } from 'antd';
 import Dragger from 'antd/es/upload/Dragger';
 import { InboxOutlined } from '@ant-design/icons';
@@ -23,29 +23,21 @@ const CreateAdvert: React.FC = () => {
   const [files, setFiles] = useState<UploadFile[]>([]);
 
   const props = {
-
     showUploadList: false,
     name: 'file',
     multiple: true,
-
-   async onChange(info: any) {
+    async onChange(info: any) {
       const { status } = info.file;
       if (status !== 'uploading') {
-        info.fileList.forEach(async (x:UploadFile)=>
-          {
-            if(!x.preview && !x.url)
-              x.preview = await getBase64(x.originFileObj as File)
-          });
-        //info.file.preview = await getBase64(info.file)
+        for (let index = 0; index < info.fileList.length; index++) {
+          if (!info.fileList[index].preview && !info.fileList[index].url) {
+            info.fileList[index].preview = await getBase64(info.fileList[index].originFileObj as File)
+          }
+        }
         setFiles(info.fileList);
       }
-      
     },
-
-    beforeUpload() {
-     
-      return false
-    }
+    beforeUpload() { return false }
   };
 
   const onDragEnd = (result: any) => {
@@ -63,46 +55,47 @@ const CreateAdvert: React.FC = () => {
 
   }
   const grid = 8;
-  const getItemStyle = (isDragging:boolean, draggableStyle:any) => ({
+  const getItemStyle = (isDragging: boolean, draggableStyle: any) => ({
     // some basic styles to make the items look a bit nicer
     userSelect: 'none',
     padding: 15,
     margin: `5px`,
     // change background colour if dragging
     background: isDragging ? 'darkgrey' : 'grey',
-  
+
     // styles we need to apply on draggables
     ...draggableStyle,
   });
 
-  const getListStyle = (isDraggingOver:boolean) => ({
-    "border-radius": "10px",
+  const getListStyle = (isDraggingOver: boolean) => ({
+    "borderRadius": "10px",
     background: isDraggingOver ? 'lightblue' : 'lightgrey',
     display: 'flex',
-    "flex-wrap": "wrap",
+    //"flexWrap": "wrap",
     padding: 15,
-    overflow: 'hidden',
+    overflow: 'auto',
   });
 
 
   return (
-    <div className='d-flex flex-column gap-2'>
+    <div className='d-flex flex-column gap-2 border border-1 rounded-2 p-2'>
       <Dragger {...props}>
         <p className="ant-upload-drag-icon">
           <InboxOutlined />
         </p>
-        <p className="ant-upload-text">Click or drag file to this area to upload</p>
+        <p className="ant-upload-text">Натисніть або перетягніть файл у цю область, щоб завантажити</p>
         <p className="ant-upload-hint">
-          Support for a single or bulk upload. Strictly prohibited from uploading company data or other
-          banned files.
+        Підтримка одиночного або масового завантаження. Категорично заборонено завантажувати дані компанії чи інше
+        заборонені файли.
         </p>
       </Dragger>
+      {files.length>0&&
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable" direction="horizontal">
           {(provided, snapshot) => (
             <div
               ref={provided.innerRef}
-               style={getListStyle(snapshot.isDraggingOver)}
+              style={getListStyle(snapshot.isDraggingOver)}
               {...provided.droppableProps}
             >
               {files.map((item, index) => (
@@ -112,18 +105,19 @@ const CreateAdvert: React.FC = () => {
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                    style={getItemStyle(
-                      snapshot.isDragging,
-                      provided.draggableProps.style
-                    )}
+                      style={getItemStyle(
+                        snapshot.isDragging,
+                        provided.draggableProps.style
+                      )}
                     >
                       <div className='border border-1 rounded-2 p-1'>
                         <Image
-                          className=' rounded-2'
+                          className='rounded-2'
                           alt={item.uid}
                           src={item.url || (item.preview as string)}
                           preview={true}
-                          width={150}
+                          width={250}
+                          style={{objectFit:"cover",aspectRatio:"16/10"}}
                         />
                       </div>
                     </div>
@@ -134,7 +128,7 @@ const CreateAdvert: React.FC = () => {
             </div>
           )}
         </Droppable>
-      </DragDropContext>
+      </DragDropContext>}
     </div>
   )
 }
