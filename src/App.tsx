@@ -1,6 +1,4 @@
 import React from 'react';
-import './styles.css';
-import Layout from './components/layout';
 import { Route, Routes } from 'react-router-dom';
 import { Registration } from './components/registration/Registration';
 import { Login } from './components/login/Login';
@@ -11,6 +9,7 @@ import CreateAdvert from './components/create-advert/CreateAdvert';
 import FavoriteAdverts from './components/favorite-adverts/FavoriteAdverts';
 import UserAccount from './components/user-account/UserAccount';
 import UserAdverts from './components/user-adverts/UserAdverts';
+import Layout from './components/Layout';
 
 
 const App: React.FC = () => {

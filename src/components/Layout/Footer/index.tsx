@@ -5,6 +5,7 @@ const Footer: React.FC = () => {
     return (
         <footer>
             <p>&copy; {new Date().getFullYear()} My App</p>
+            
             {/* Add any additional footer content here */}
         </footer>
     );

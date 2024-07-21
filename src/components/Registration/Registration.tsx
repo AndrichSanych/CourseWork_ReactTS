@@ -6,18 +6,7 @@ import BackButton from '../common-components/BackButton'
 import { UserRegisterModel } from '../../models/UserRegisterModel'
 import { useState } from 'react'
 import { PlusOutlined } from '@ant-design/icons'
-
-type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
-
-const getBase64 = (file: FileType): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
-  });
-
-
+import { FileType, getBase64 } from '../../helpers/common-methods'
 
 export const Registration: React.FC = () => {
   const navigate = useNavigate();
