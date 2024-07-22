@@ -2,8 +2,8 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Registration } from '../src/components/user/registration/Registration';
 import { Login } from './components/user/login/Login';
-import Error from './components/Error/Error'
-import HomePage from './components/home-page/HomePage';
+import Error from './components/Error'
+import HomePage from './components/home-page';
 import UserProtectedRoute from './components/protected-routes/UserProtectedRoute';
 import FavoriteAdverts from './components/user/favorite-adverts/FavoriteAdverts';
 import UserAccount from './components/user/user-account/UserAccount';

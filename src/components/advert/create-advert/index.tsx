@@ -1,40 +1,45 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Modal, type UploadFile } from 'antd';
+import { Button, Col, Form, Input, Modal, Row, type UploadFile } from 'antd';
 import ImageUpload from '../../common-components/ImageUpload';
 import { AdvertCreationModel } from '../../../models/AdvertCreationModel';
 import CategoryView from '../../category/category-view';
 import { CategoryModel } from '../../../models/CategoryModel';
 import { categoryService } from '../../../services/categoryService';
+import CategoriesGrid from '../../category/categories-grid';
 
 
 const CreateAdvert: React.FC = () => {
   const [files, setFiles] = useState<UploadFile[]>([]);
   const [categories, setCategories] = useState<CategoryModel[]>([]);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
-  const [selectedCategory,setSelectedCategory] = useState<CategoryModel>({
-    name: 'Обрати категорію'
-  })
+  const [selectedCategory, setSelectedCategory] = useState<CategoryModel>();
 
-  useEffect( () => {
-    (async()=>{
+  useEffect(() => {
+    (async () => {
       var result = await categoryService.getAll();
-      if(result.status === 200){
+      if (result.status === 200) {
         setCategories(result.data)
       }
     })()
-     
+
   }, [])
 
 
   const onFinish = (advert: AdvertCreationModel) => {
     advert.imageFiles = files.map(x => x.originFileObj);
+    advert.categoryId = selectedCategory?.id || 0;
   }
 
   const showModal = () => {
     setIsCategoryModalOpen(true);
   };
 
-  const handleOk = () => {
+  const handleClick = (id: number) => {
+    setIsCategoryModalOpen(false);
+    setSelectedCategory(categories.find(x => x.id === id))
+  };
+
+  const handleClose = () => {
     setIsCategoryModalOpen(false);
   };
   return (
@@ -84,12 +89,14 @@ const CreateAdvert: React.FC = () => {
                 },
               ]}
             >
-            </Form.Item>
-            <div className='gap-3 p-3 bg-danger-subtle d-inline-flex'>
-                 <CategoryView {...selectedCategory}/>
-                 <Button className='fs-6' onClick={showModal} type='link'>Змінити</Button>
+           
+            <div className={`${selectedCategory ? '': 'p-4'} gap-3  rounded-2 d-inline-flex bg-secondary-subtle`}>
+              {selectedCategory ? <CategoryView category={selectedCategory} /> : <h5>Оберіть категорію</h5>}
+              <Button className='fs-6 align-self-center' onClick={showModal} type='link'>Змінити</Button>
             </div>
+            </Form.Item>
           </div>
+
 
           <div className='white-container'>
             <Form.Item
@@ -123,10 +130,17 @@ const CreateAdvert: React.FC = () => {
         </Form>
       </div>
 
-      <Modal title="Basic Modal" open={isCategoryModalOpen} onOk={handleOk} >
-          <div className='row row-cols-3'>
-              {categories.map(x=> <></>)}
-          </div>
+      <Modal
+        centered
+        closable
+        title={<h4>Категорії</h4>}
+        open={isCategoryModalOpen}
+        onClose={handleClose}
+        onCancel={handleClose}
+        width={'80%'}
+        okButtonProps={{ hidden: true }} >
+
+        <CategoriesGrid categories={categories} handleClick={handleClick}/>
       </Modal>
     </>
   )
