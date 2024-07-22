@@ -6,23 +6,15 @@ import CategoryView from '../../category/category-view';
 import { CategoryModel } from '../../../models/CategoryModel';
 import { categoryService } from '../../../services/categoryService';
 import CategoriesGrid from '../../category/categories-grid';
+import CategorySelector from '../../category/category-selector';
 
 
 const CreateAdvert: React.FC = () => {
   const [files, setFiles] = useState<UploadFile[]>([]);
-  const [categories, setCategories] = useState<CategoryModel[]>([]);
-  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  
   const [selectedCategory, setSelectedCategory] = useState<CategoryModel>();
 
-  useEffect(() => {
-    (async () => {
-      var result = await categoryService.getAll();
-      if (result.status === 200) {
-        setCategories(result.data)
-      }
-    })()
-
-  }, [])
+  
 
 
   const onFinish = (advert: AdvertCreationModel) => {
@@ -30,18 +22,7 @@ const CreateAdvert: React.FC = () => {
     advert.categoryId = selectedCategory?.id || 0;
   }
 
-  const showModal = () => {
-    setIsCategoryModalOpen(true);
-  };
-
-  const handleClick = (id: number) => {
-    setIsCategoryModalOpen(false);
-    setSelectedCategory(categories.find(x => x.id === id))
-  };
-
-  const handleClose = () => {
-    setIsCategoryModalOpen(false);
-  };
+  
   return (
     <>
       <div className=' mx-auto d-flex flex-column align-items-start'>
@@ -90,10 +71,7 @@ const CreateAdvert: React.FC = () => {
               ]}
             >
            
-            <div className={`${selectedCategory ? '': 'p-4'} gap-3  rounded-2 d-inline-flex bg-secondary-subtle`}>
-              {selectedCategory ? <CategoryView category={selectedCategory} /> : <h5>Оберіть категорію</h5>}
-              <Button className='fs-6 align-self-center' onClick={showModal} type='link'>Змінити</Button>
-            </div>
+            <CategorySelector category={selectedCategory}/>
             </Form.Item>
           </div>
 
@@ -130,18 +108,7 @@ const CreateAdvert: React.FC = () => {
         </Form>
       </div>
 
-      <Modal
-        centered
-        closable
-        title={<h4>Категорії</h4>}
-        open={isCategoryModalOpen}
-        onClose={handleClose}
-        onCancel={handleClose}
-        width={'80%'}
-        okButtonProps={{ hidden: true }} >
-
-        <CategoriesGrid categories={categories} handleClick={handleClick}/>
-      </Modal>
+      
     </>
   )
 }
