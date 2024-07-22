@@ -1,12 +1,12 @@
-import { Image, Button, DatePicker, Divider, Form, GetProp, Input, message, Upload, UploadFile, UploadProps } from 'antd'
+import { Image, Button, DatePicker, Divider, Form,  Input, message, Upload, UploadFile, UploadProps } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import './Registration.css'
-import { accountService } from '../../services/accountService'
-import BackButton from '../common-components/BackButton'
-import { UserRegisterModel } from '../../models/UserRegisterModel'
+import { accountService } from '../../../services/accountService'
+import BackButton from '../../common-components/BackButton'
+import { UserRegisterModel } from '../../../models/UserRegisterModel'
 import { useState } from 'react'
 import { PlusOutlined } from '@ant-design/icons'
-import { FileType, getBase64 } from '../../helpers/common-methods'
+import { FileType, getBase64 } from '../../../helpers/common-methods'
 
 export const Registration: React.FC = () => {
   const navigate = useNavigate();

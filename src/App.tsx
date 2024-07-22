@@ -1,15 +1,15 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { Registration } from './components/registration/Registration';
-import { Login } from './components/login/Login';
+import { Registration } from '../src/components/user/registration/Registration';
+import { Login } from './components/user/login/Login';
 import Error from './components/Error/Error'
 import HomePage from './components/home-page/HomePage';
 import UserProtectedRoute from './components/protected-routes/UserProtectedRoute';
-import CreateAdvert from './components/create-advert/CreateAdvert';
-import FavoriteAdverts from './components/favorite-adverts/FavoriteAdverts';
-import UserAccount from './components/user-account/UserAccount';
-import UserAdverts from './components/user-adverts/UserAdverts';
+import FavoriteAdverts from './components/user/favorite-adverts/FavoriteAdverts';
+import UserAccount from './components/user/user-account/UserAccount';
+import UserAdverts from './components/user/user-adverts/UserAdverts';
 import Layout from './components/Layout';
+import CreateAdvert from './components/advert/create-advert';
 
 
 const App: React.FC = () => {
