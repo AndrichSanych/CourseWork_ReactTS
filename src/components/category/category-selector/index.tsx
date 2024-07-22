@@ -7,9 +7,10 @@ import { categoryService } from "../../../services/categoryService";
 
 interface CategorySelectorProps {
     category?: CategoryModel
+    onChange?:Function
 }
 
-const CategorySelector: React.FC<CategorySelectorProps> = ({ category }) => {
+const CategorySelector: React.FC<CategorySelectorProps> = ({ category,onChange = ()=>{} }) => {
     const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
     const [categories, setCategories] = useState<CategoryModel[]>([]);
 
@@ -31,7 +32,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({ category }) => {
 
     const handleClick = (id: number) => {
         setIsCategoryModalOpen(false);
-        category = categories.find(x => x.id === id)
+        onChange(categories.find(x => x.id === id))
     };
 
     const handleClose = () => {

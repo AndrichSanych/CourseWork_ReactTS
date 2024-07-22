@@ -72,6 +72,9 @@ footer {
 }
 
 .white-container{
+  display: flex;
+  flex-direction: column;
+  gap:20px;
   background-color: white;
   padding: 30px;
   border-radius: 5px;
@@ -83,13 +86,15 @@ footer {
 }
 
 .category-view {
-
+  color:black;
   background-color: lightgrey; 
-  transition: all 0.3s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .category-view:hover {
+  color:lightgray;
   cursor: pointer;
   background-color: gray;
+  transform: scale(1.03);
 }
 

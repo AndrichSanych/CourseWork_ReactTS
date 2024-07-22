@@ -1,5 +1,5 @@
 import { UploadFile } from 'antd'
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import { FileType, getBase64, reorder } from '../../helpers/common-methods';
 import Dragger from 'antd/es/upload/Dragger';
 import { InboxOutlined } from '@ant-design/icons';
@@ -7,22 +7,11 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import SortedImage from './SortedImage';
 
 interface ImageLoaderProps {
-  files: UploadFile[] | undefined
-  setFiles: Function
-  filesUpdate?: Function
-
+  files: UploadFile[]
+  onChange?: Function
 }
 
-const ImageUpload: React.FC<ImageLoaderProps> = ({ files, setFiles, filesUpdate = () => { } }) => {
-  const firstUpdate = useRef<boolean>(true);
-
-  useEffect(() => {
-    if (firstUpdate.current)
-      firstUpdate.current = false;
-    else
-      filesUpdate()
-    console.log(files)
-  }, [files])
+const ImageUpload: React.FC<ImageLoaderProps> = ({ files, onChange = () => { } }) => {
 
   const props = {
     showUploadList: false,
@@ -36,7 +25,7 @@ const ImageUpload: React.FC<ImageLoaderProps> = ({ files, setFiles, filesUpdate 
             info.fileList[index].preview = await getBase64(info.fileList[index].originFileObj as FileType)
           }
         }
-        setFiles(info.fileList);
+        onChange(info.fileList);
       }
     },
     beforeUpload() { return false }
@@ -47,15 +36,15 @@ const ImageUpload: React.FC<ImageLoaderProps> = ({ files, setFiles, filesUpdate 
       return;
     }
 
-    setFiles(reorder(
-      files||[],
+    onChange(reorder(
+      files,
       result.source.index,
       result.destination.index
     ));
   }
 
   const deleteImage = (uid: string) => {
-    setFiles(files?.filter(x => x.uid !== uid))
+    onChange(files?.filter(x => x.uid !== uid))
   }
 
   const getItemStyle = (isDragging: boolean, draggableStyle: any) => ({
@@ -74,7 +63,10 @@ const ImageUpload: React.FC<ImageLoaderProps> = ({ files, setFiles, filesUpdate 
     padding: 15,
     overflow: 'auto',
   });
+
   return (
+    <>
+     <h6>Перше фото буде на обкладинці оголошення. Перетягніть, щоб змінити порядок фото.</h6>
     <div className='d-flex flex-column gap-2 border border-1 rounded-2 p-2'>
       <Dragger {...props} fileList={files}>
         <p className="ant-upload-drag-icon">
@@ -118,6 +110,8 @@ const ImageUpload: React.FC<ImageLoaderProps> = ({ files, setFiles, filesUpdate 
           </Droppable>
         </DragDropContext>}
     </div>
+    </>
+    
   )
 }
 

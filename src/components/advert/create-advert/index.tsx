@@ -1,28 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Col, Form, Input, Modal, Row, type UploadFile } from 'antd';
+import React, { useState } from 'react';
+import { Button, Form, Input, type UploadFile } from 'antd';
 import ImageUpload from '../../common-components/ImageUpload';
 import { AdvertCreationModel } from '../../../models/AdvertCreationModel';
-import CategoryView from '../../category/category-view';
 import { CategoryModel } from '../../../models/CategoryModel';
-import { categoryService } from '../../../services/categoryService';
-import CategoriesGrid from '../../category/categories-grid';
 import CategorySelector from '../../category/category-selector';
+import './CreateAdvert.css'
 
 
 const CreateAdvert: React.FC = () => {
   const [files, setFiles] = useState<UploadFile[]>([]);
-  
+
   const [selectedCategory, setSelectedCategory] = useState<CategoryModel>();
 
-  
-
-
   const onFinish = (advert: AdvertCreationModel) => {
-    advert.imageFiles = files.map(x => x.originFileObj);
+
     advert.categoryId = selectedCategory?.id || 0;
+    console.log(advert)
   }
 
-  
   return (
     <>
       <div className=' mx-auto d-flex flex-column align-items-start'>
@@ -39,9 +34,9 @@ const CreateAdvert: React.FC = () => {
             <h4>Опишіть у подробицях</h4>
             <Form.Item
               name="title"
-              label="Вкажіть назву"
+              label={<h6>Вкажіть назву</h6>}
               hasFeedback
-
+              className='fs-3'
               rules={[
                 {
                   pattern: RegExp('^[A-Z А-Я].*'),
@@ -62,7 +57,9 @@ const CreateAdvert: React.FC = () => {
             <Form.Item
               hasFeedback
               name="categoryId"
-              label="Категорія"
+              label={<h6>Категорія</h6>}
+              validateTrigger='onChange'
+             // valuePropName='catgory.id'
               rules={[
                 {
                   required: true,
@@ -70,8 +67,7 @@ const CreateAdvert: React.FC = () => {
                 },
               ]}
             >
-           
-            <CategorySelector category={selectedCategory}/>
+              <CategorySelector category={selectedCategory} onChange={setSelectedCategory} />
             </Form.Item>
           </div>
 
@@ -79,22 +75,16 @@ const CreateAdvert: React.FC = () => {
           <div className='white-container'>
             <Form.Item
               name='imageFiles'
-              label="Фото"
-              validateTrigger="filesUpdate"
+              label={<h6>Фото</h6>}
+              validateTrigger="onChange"
+            // valuePropName='files'
               rules={[
-                () => ({
-                  validator() {
-                    if (files.length > 0) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(new Error('Оберіть як мінімум одине фото'));
-                  },
-                })
-
-              ]}
-            >
-              <h6>Перше фото буде на обкладинці оголошення. Перетягніть, щоб змінити порядок фото.</h6>
-              <ImageUpload files={files} setFiles={setFiles} />
+                {
+                  required: true,
+                  message: 'Оберіть як мінімум одине фото'
+                },
+              ]}>
+              <ImageUpload files={files} onChange={setFiles} />
             </Form.Item>
           </div>
 
@@ -108,7 +98,7 @@ const CreateAdvert: React.FC = () => {
         </Form>
       </div>
 
-      
+
     </>
   )
 }
