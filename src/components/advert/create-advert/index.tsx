@@ -1,23 +1,44 @@
-import React, { useState } from 'react';
-import { Button, Form, Input, InputNumber, Radio, Switch, type UploadFile } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Form, Input, InputNumber, Radio, Switch, TreeSelect, type UploadFile } from 'antd';
 import ImageUpload from '../../common-components/ImageUpload';
 import { AdvertCreationModel } from '../../../models/AdvertCreationModel';
 import { CategoryModel } from '../../../models/CategoryModel';
 import CategorySelector from '../../category/category-selector';
 import './CreateAdvert.css'
 import TextArea from 'antd/es/input/TextArea';
+import { AreaModel } from '../../../models/AreaModel';
+import { areaService } from '../../../services/areaService';
 
-
+interface TreeSelectElement{
+    value:number,
+    title: string,
+    children: TreeSelectElement[]
+}
 
 const CreateAdvert: React.FC = () => {
   const [files, setFiles] = useState<UploadFile[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<CategoryModel>();
-  const [priceStatus, setPriceStatus] = useState<string>('price')
+  const [priceStatus, setPriceStatus] = useState<string>('price');
+  const [treeElements,setTreeElements]  = useState<TreeSelectElement[]>([])
+
+  useEffect(()=>{
+    (async ()=>{
+      var result = await areaService.getAll();
+      if(result.status === 200){
+        var elements = result.data.map<TreeSelectElement>(x=> ({value: x.id , title: x.name,children:[]}))
+        setTreeElements(elements);
+      }
+    })()
+  },[]);
 
   const onFinish = (advert: AdvertCreationModel) => {
 
     advert.categoryId = selectedCategory?.id || 0;
     console.log(advert)
+  }
+
+  const onTreeExpand = ()=>{
+
   }
 
   return (
@@ -122,23 +143,50 @@ const CreateAdvert: React.FC = () => {
               <>
                 <Form.Item
                   name='price'
-                  label={<h6>Ціна за 1 шт.</h6>}>
+                  label={<h6>Ціна за 1 шт.</h6>}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Не забудьте заповнити ціну"
+                    }
+                  ]}>
                   <InputNumber addonAfter="грн." size='large' />
                 </Form.Item>
 
                 <Form.Item
-                  noStyle
-                  name='isContractPrice'
-                  valuePropName="checked">
-                  
+                  name='isContractPrice'>
+                  <div style={{ width: 250 }} className='d-flex justify-content-between' >
                     <h6>Договірна</h6>
-                    <Switch />
+                    <Switch defaultValue={false} />
                   </div>
-
                 </Form.Item>
               </>
-
             }
+          </div>
+
+          <div className='white-container'>
+            <Form.Item
+              name='cityId'
+              label={<h6>Місцезнаходження</h6>}
+              rules={[
+                {
+                  required: true,
+                  message: "Не забудьте обрати місцезнаходження"
+                }
+              ]}>
+              <TreeSelect
+                size='large'
+                showSearch
+                style={{ width: 250 }}
+                //value={value}
+                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                placeholder="Оберіть місцезнаходження"
+                allowClear
+                onTreeExpand={onTreeExpand}              
+              // onChange={onChange}
+               treeData={treeElements}
+              />
+            </Form.Item>
           </div>
 
           <div className='buttons-block'>

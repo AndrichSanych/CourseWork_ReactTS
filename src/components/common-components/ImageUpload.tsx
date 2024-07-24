@@ -1,4 +1,4 @@
-import { UploadFile } from 'antd'
+import { Badge, UploadFile } from 'antd'
 import React from 'react'
 import { FileType, getBase64, reorder } from '../../helpers/common-methods';
 import Dragger from 'antd/es/upload/Dragger';
@@ -66,52 +66,56 @@ const ImageUpload: React.FC<ImageLoaderProps> = ({ files, onChange = () => { } }
 
   return (
     <>
-     <h6>Перше фото буде на обкладинці оголошення. Перетягніть, щоб змінити порядок фото.</h6>
-    <div className='d-flex flex-column gap-2 border border-1 rounded-2 p-2'>
-      <Dragger {...props} fileList={files}>
-        <p className="ant-upload-drag-icon">
-          <InboxOutlined />
-        </p>
-        <p className="ant-upload-text">Натисніть або перетягніть файл у цю область, щоб завантажити</p>
-        <p className="ant-upload-hint">
-          Підтримка одиночного або масового завантаження. Категорично заборонено завантажувати дані компанії чи інше
-          заборонені файли.
-        </p>
-      </Dragger>
-      {(files?.length || 0) > 0 &&
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="droppable" direction="horizontal">
-            {(provided, snapshot) => (
-              <div
-                ref={provided.innerRef}
-                style={getListStyle(snapshot.isDraggingOver)}
-                {...provided.droppableProps}
-              >
-                {files?.map((item, index) => (
-                  <Draggable key={item.uid} draggableId={item.uid} index={index}>
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={getItemStyle(
-                          snapshot.isDragging,
-                          provided.draggableProps.style
-                        )}
-                      >
-                        <SortedImage item={item} deleteHandler={deleteImage} />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>}
-    </div>
+      <h6>Перше фото буде на обкладинці оголошення. Перетягніть, щоб змінити порядок фото.</h6>
+      <div className='d-flex flex-column gap-2 border border-1 rounded-2 p-2'>
+        <Dragger {...props} fileList={files}>
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">Натисніть або перетягніть файл у цю область, щоб завантажити</p>
+          <p className="ant-upload-hint">
+            Підтримка одиночного або масового завантаження. Категорично заборонено завантажувати дані компанії чи інше
+            заборонені файли.
+          </p>
+        </Dragger>
+        {(files?.length || 0) > 0 &&
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="droppable" direction="horizontal">
+              {(provided, snapshot) => (
+                <div
+                  ref={provided.innerRef}
+                  style={getListStyle(snapshot.isDraggingOver)}
+                  {...provided.droppableProps}
+                >
+                  {files?.map((item, index) => (
+                    <Draggable key={item.uid} draggableId={item.uid} index={index}>
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={getItemStyle(
+                            snapshot.isDragging,
+                            provided.draggableProps.style
+                          )}
+                        >
+                          {index === 0 ?
+                           <Badge.Ribbon text="Основне" color="green">
+                            <SortedImage item={item} deleteHandler={deleteImage} />
+                          </Badge.Ribbon>:
+                          <SortedImage item={item} deleteHandler={deleteImage} />}
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>}
+      </div>
     </>
-    
+
   )
 }
 
