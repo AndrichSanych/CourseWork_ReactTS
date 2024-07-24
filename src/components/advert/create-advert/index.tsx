@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, type UploadFile } from 'antd';
+import { Button, Form, Input, InputNumber, Radio, Switch, type UploadFile } from 'antd';
 import ImageUpload from '../../common-components/ImageUpload';
 import { AdvertCreationModel } from '../../../models/AdvertCreationModel';
 import { CategoryModel } from '../../../models/CategoryModel';
 import CategorySelector from '../../category/category-selector';
 import './CreateAdvert.css'
+import TextArea from 'antd/es/input/TextArea';
+
 
 
 const CreateAdvert: React.FC = () => {
   const [files, setFiles] = useState<UploadFile[]>([]);
-
   const [selectedCategory, setSelectedCategory] = useState<CategoryModel>();
+  const [priceStatus, setPriceStatus] = useState<string>('price')
 
   const onFinish = (advert: AdvertCreationModel) => {
 
@@ -58,8 +60,6 @@ const CreateAdvert: React.FC = () => {
               hasFeedback
               name="categoryId"
               label={<h6>Категорія</h6>}
-              validateTrigger='onChange'
-             // valuePropName='catgory.id'
               rules={[
                 {
                   required: true,
@@ -76,8 +76,6 @@ const CreateAdvert: React.FC = () => {
             <Form.Item
               name='imageFiles'
               label={<h6>Фото</h6>}
-              validateTrigger="onChange"
-            // valuePropName='files'
               rules={[
                 {
                   required: true,
@@ -88,6 +86,60 @@ const CreateAdvert: React.FC = () => {
             </Form.Item>
           </div>
 
+          <div className='white-container'>
+            <Form.Item
+              name='description'
+              label={<h6>Опис</h6>}
+              rules={[
+                {
+                  pattern: RegExp('^[A-Z А-Я].*'),
+                  message: "Опис повинен починатися з великої букви"
+                },
+                {
+                  required: true,
+                  message: "Не забудьте заповнити опис"
+                },
+                {
+                  min: 40,
+                  message: "Введіть щонайменше 40 символів"
+                },
+              ]}>
+              <TextArea
+                showCount
+                maxLength={9000}
+                placeholder="disable resize"
+                style={{ height: 300, resize: 'none' }}
+              />
+            </Form.Item>
+          </div>
+
+          <div className='white-container'>
+            <Radio.Group defaultValue="price" onChange={(e) => setPriceStatus(e.target.value)} size="large" buttonStyle="solid">
+              <Radio.Button value="price">Ціна</Radio.Button>
+              <Radio.Button value="free">Безкоштовно</Radio.Button>
+            </Radio.Group>
+            {priceStatus === 'price' &&
+              <>
+                <Form.Item
+                  name='price'
+                  label={<h6>Ціна за 1 шт.</h6>}>
+                  <InputNumber addonAfter="грн." size='large' />
+                </Form.Item>
+
+                <Form.Item
+                  noStyle
+                  name='isContractPrice'
+                  valuePropName="checked">
+                  
+                    <h6>Договірна</h6>
+                    <Switch />
+                  </div>
+
+                </Form.Item>
+              </>
+
+            }
+          </div>
 
           <div className='buttons-block'>
             <Button type="primary" htmlType="submit">

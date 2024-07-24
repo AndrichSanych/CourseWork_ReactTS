@@ -6,6 +6,7 @@ export interface AdvertCreationModel{
      description:string 
      isNew:boolean 
      isVip:boolean 
+     isContractPrice:boolean
      price:number 
      imageFiles:(File | undefined)[]
 }
