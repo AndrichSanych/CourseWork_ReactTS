@@ -4,5 +4,5 @@ const categoriesAPIUrl = process.env.REACT_APP_CATEGORIES_API_URL;
 export const categoryService = {
 
     getAll: () =>  axios.get<CategoryModel[]>( categoriesAPIUrl + '/getcategories'),
-    getById:(id:number)=> axios.post(categoriesAPIUrl + `/getbyid/${id}`)
+    getById:(id:number)=> axios.get<CategoryModel>(categoriesAPIUrl + `/getbyid/${id}`)
 }

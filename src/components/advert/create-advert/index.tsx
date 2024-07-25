@@ -1,35 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, InputNumber, Radio, Switch, TreeSelect, type UploadFile } from 'antd';
+import { Button, Form, GetProp, Input, InputNumber, Radio, Switch, TreeSelect, TreeSelectProps, type UploadFile } from 'antd';
 import ImageUpload from '../../common-components/ImageUpload';
 import { AdvertCreationModel } from '../../../models/AdvertCreationModel';
 import { CategoryModel } from '../../../models/CategoryModel';
 import CategorySelector from '../../category/category-selector';
 import './CreateAdvert.css'
 import TextArea from 'antd/es/input/TextArea';
-import { AreaModel } from '../../../models/AreaModel';
 import { areaService } from '../../../services/areaService';
+import { SmileOutlined } from '@ant-design/icons';
+import { cityService } from '../../../services/cityService';
+import { CityModel } from '../../../models/CityModel';
 
-interface TreeSelectElement{
-    value:number,
-    title: string,
-    children: TreeSelectElement[]
-}
+
+
+
 
 const CreateAdvert: React.FC = () => {
+  type DefaultOptionType = GetProp<TreeSelectProps, 'treeData'>[number];
   const [files, setFiles] = useState<UploadFile[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<CategoryModel>();
   const [priceStatus, setPriceStatus] = useState<string>('price');
-  const [treeElements,setTreeElements]  = useState<TreeSelectElement[]>([])
+  const [treeElements, setTreeElements] = useState<Omit<DefaultOptionType, 'label'>[]>([])
 
-  useEffect(()=>{
-    (async ()=>{
+  useEffect(() => {
+    (async () => {
       var result = await areaService.getAll();
-      if(result.status === 200){
-        var elements = result.data.map<TreeSelectElement>(x=> ({value: x.id , title: x.name,children:[]}))
+      if (result.status === 200) {
+        var elements = result.data.map(x => ({ id: x.id, value: x.id, title: x.name, pId: 0 ,selectable:false}))
         setTreeElements(elements);
       }
     })()
-  },[]);
+  }, []);
 
   const onFinish = (advert: AdvertCreationModel) => {
 
@@ -37,9 +38,22 @@ const CreateAdvert: React.FC = () => {
     console.log(advert)
   }
 
-  const onTreeExpand = ()=>{
+  const getTreeNode = async (parentId: number) => {
+    var result = await cityService.getByAreaId(parentId);
+    if (result.status === 200) {
+      return (result.data as CityModel[]).map(x => ({ id: x.id, value: x.id, title: x.name, pId: parentId, isLeaf: true }));
+    }
+    else return []
+  };
 
+
+  const onLoadData: TreeSelectProps['loadData'] = async ({ id }) => {
+    var temp = [...treeElements, ...(await getTreeNode(id))];
+    setTreeElements(temp);
   }
+
+
+
 
   return (
     <>
@@ -175,30 +189,33 @@ const CreateAdvert: React.FC = () => {
                 }
               ]}>
               <TreeSelect
+                treeDataSimpleMode
+                treeCheckable={false}
                 size='large'
                 showSearch
                 style={{ width: 250 }}
-                //value={value}
                 dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                 placeholder="Оберіть місцезнаходження"
                 allowClear
-                onTreeExpand={onTreeExpand}              
-              // onChange={onChange}
-               treeData={treeElements}
+                loadData={onLoadData}
+                treeData={treeElements}
+                notFoundContent={
+                  <div style={{ textAlign: 'center' }}>
+                    <SmileOutlined style={{ fontSize: 20 }} />
+                    <p>Дані не знайдені</p>
+                  </div>
+                }
               />
             </Form.Item>
           </div>
 
-          <div className='buttons-block'>
-            <Button type="primary" htmlType="submit">
-              Зберегти
+          <div className='d-flex justify-content-end'>
+          <Button  size='large' htmlType="submit">
+              Опублікувати
             </Button>
-
           </div>
-        </Form>
+          </Form>
       </div>
-
-
     </>
   )
 }
