@@ -75,7 +75,7 @@ const Header: React.FC = observer(() => {
     return (
         <header>
             <div className='w-75 mx-auto d-flex  justify-content-between align-items-center'>
-                <img style={{ height: 40, width: 70 }} src={logo} alt='logo' />
+                <img onClick={()=>navigate('/')} style={{ height: 40, width: 70, cursor:'pointer' }} src={logo} alt='logo' />
                 <div className=' d-flex gap-lg-5'>
                     <HeartOutlined className='favourite-button' onClick={() => navigate('/favorites')} />
                     {(user.isAuthorized &&

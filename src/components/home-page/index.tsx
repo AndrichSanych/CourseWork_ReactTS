@@ -1,8 +1,14 @@
-import React from 'react'
 
-const HomePage:React.FC= () => {
+import React from 'react'
+import Search from '../search'
+
+const HomePage: React.FC = () => {
+
+  
   return (
-    <div>HomePage</div>
+    <>
+      <Search></Search>
+    </>
   )
 }
 

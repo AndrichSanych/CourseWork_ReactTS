@@ -14,13 +14,15 @@ import { advertService } from '../../../services/advertService';
 import { useNavigate } from 'react-router-dom';
 import user from '../../../stores/UserStore'
 
+import { TreeElement } from '../../../models/Models';
+
 const CreateAdvert: React.FC = () => {
-  type DefaultOptionType = GetProp<TreeSelectProps, 'treeData'>[number];
+  
   const navigate = useNavigate();
   const [files, setFiles] = useState<UploadFile[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<CategoryModel>();
   const [priceStatus, setPriceStatus] = useState<boolean>(true);
-  const [treeElements, setTreeElements] = useState<Omit<DefaultOptionType, 'label'>[]>([]);
+  const [treeElements, setTreeElements] = useState<TreeElement[]>([]);
   const [isNew, setIsNew] = useState<boolean>(true);
   const [isVip, setIsVip] = useState<boolean>(true);
 
@@ -28,7 +30,7 @@ const CreateAdvert: React.FC = () => {
     (async () => {
       var result = await areaService.getAll();
       if (result.status === 200) {
-        var elements = result.data.map(x => ({ id: x.id, value: x.id, title: x.name, pId: 0, selectable: false }))
+        var elements = result.data.map(x => ({ id: x.id, value: x.id, title: x.name, pId: 0, selectable: false ,key:x.id }))
         setTreeElements(elements);
       }
     })()
@@ -64,7 +66,7 @@ const CreateAdvert: React.FC = () => {
   const getTreeNode = async (parentId: number) => {
     var result = await cityService.getByAreaId(parentId);
     if (result.status === 200) {
-      return (result.data as CityModel[]).map(x => ({ id: x.id, value: x.id, title: x.name, pId: parentId, isLeaf: true }));
+      return (result.data as CityModel[]).map(x => ({ id: x.id, value: x.id, title: x.name, pId: parentId, isLeaf: true,key:x.id }));
     }
     else return []
   };
@@ -72,7 +74,7 @@ const CreateAdvert: React.FC = () => {
 
   const onLoadData: TreeSelectProps['loadData'] = async ({ id }) => {
     var temp = [...treeElements, ...(await getTreeNode(id))];
-    setTreeElements(temp);
+    setTreeElements(temp as TreeElement[]);
   }
 
   return (
