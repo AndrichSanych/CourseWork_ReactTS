@@ -8,9 +8,7 @@ const Layout: React.FC = () => {
     return (
         <div className=' bg-main'>
             <Header />
-            <div className="mx-auto w-80">
-                 <MainContent />
-            </div>
+                <MainContent />
             <Footer />
         </div>
     );

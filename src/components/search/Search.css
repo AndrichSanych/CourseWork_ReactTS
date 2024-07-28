@@ -14,11 +14,13 @@
 }
 
 .search-container{
-    width: 100%;
+    width: 70%;
     height: 8vh;
     display: flex;
     gap:1px;
     align-items: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .search-item-container{
@@ -41,7 +43,7 @@
     border-color: #333;
     border-style: solid;
     height: 100%;
-    width: 15%;
+    width: 13%;
 }
 
 .search-button:hover{

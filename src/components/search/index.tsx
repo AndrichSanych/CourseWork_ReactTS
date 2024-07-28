@@ -52,9 +52,7 @@ const Search: React.FC<SearchProps> = ({ searchString = '', placeId = 0, isArea 
         <Form
             onFinish={search}
             className='mx-auto'
-            style={{
-                maxWidth: '80%',
-            }}        >
+            >
             <div className='search-container'>
                 <div className='search-item-container w-50'>
                     <SearchOutlined className=' fs-3' />

@@ -79,7 +79,7 @@ const CreateAdvert: React.FC = () => {
 
   return (
     <>
-      <div className=' mx-auto d-flex flex-column align-items-start'>
+      <div className=' w-70 mx-auto d-flex flex-column align-items-start'>
         <h2 className='my-3 fw-bold'>Створити оголошення</h2>
         <Form
           layout='vertical'
