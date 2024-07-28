@@ -31,14 +31,15 @@ class UserStore {
                 exp: data['exp'],
                 iss: data['iss'],
                 roles: data['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
-                birthdate: new Date(data['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/dateofbirth']).toISOString(),
+                birthdate: data['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/dateofbirth'],
                 phoneNumber: data['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/homephone'] || '',
-                avatar: data['http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor'] || ''
+                avatar: data['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/anonymous'] || ''
             }
         }
     };
     clearUserData() { this.user = undefined }
 }
+// eslint-disable-next-line import/no-anonymous-default-export
 export default new UserStore();
 
 

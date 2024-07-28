@@ -5,11 +5,10 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { SetupInterceptors } from './interceptor/Interceptor';
-import user from '../src/stores/UserStore'
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-SetupInterceptors(user.clearUserData);
+SetupInterceptors();
 root.render(
     <BrowserRouter>
         <App />

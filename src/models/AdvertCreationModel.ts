@@ -1,3 +1,5 @@
+import { UploadFile } from "antd"
+
 export interface AdvertCreationModel{
      userId:string
      cityId:number
@@ -8,5 +10,6 @@ export interface AdvertCreationModel{
      isVip:boolean 
      isContractPrice:boolean
      price:number 
-     imageFiles:(File | undefined)[]
+     imageFiles:(UploadFile | undefined)[]
+    
 }

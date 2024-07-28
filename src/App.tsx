@@ -1,13 +1,13 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { Registration } from '../src/components/user/registration/Registration';
-import { Login } from './components/user/login/Login';
+import { Registration } from './components/user/registration';
+import { Login } from './components/user/login';
 import Error from './components/Error'
 import HomePage from './components/home-page';
 import UserProtectedRoute from './components/protected-routes/UserProtectedRoute';
-import FavoriteAdverts from './components/user/favorite-adverts/FavoriteAdverts';
-import UserAccount from './components/user/user-account/UserAccount';
-import UserAdverts from './components/user/user-adverts/UserAdverts';
+import FavoriteAdverts from './components/user/favorite-adverts';
+import UserAccount from './components/user/user-account';
+import UserAdverts from './components/user/user-adverts';
 import Layout from './components/Layout';
 import CreateAdvert from './components/advert/create-advert';
 

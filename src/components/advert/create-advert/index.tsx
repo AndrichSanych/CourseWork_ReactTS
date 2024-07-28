@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, GetProp, Input, InputNumber, Radio, Switch, TreeSelect, TreeSelectProps, type UploadFile } from 'antd';
+import { Button, Form, GetProp, Input, InputNumber, message, Radio, Switch, TreeSelect, TreeSelectProps, type UploadFile } from 'antd';
 import ImageUpload from '../../common-components/ImageUpload';
 import { AdvertCreationModel } from '../../../models/AdvertCreationModel';
 import { CategoryModel } from '../../../models/CategoryModel';
@@ -10,32 +10,55 @@ import { areaService } from '../../../services/areaService';
 import { SmileOutlined } from '@ant-design/icons';
 import { cityService } from '../../../services/cityService';
 import { CityModel } from '../../../models/CityModel';
-
-
-
-
+import { advertService } from '../../../services/advertService';
+import { useNavigate } from 'react-router-dom';
+import user from '../../../stores/UserStore'
 
 const CreateAdvert: React.FC = () => {
   type DefaultOptionType = GetProp<TreeSelectProps, 'treeData'>[number];
+  const navigate = useNavigate();
   const [files, setFiles] = useState<UploadFile[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<CategoryModel>();
-  const [priceStatus, setPriceStatus] = useState<string>('price');
-  const [treeElements, setTreeElements] = useState<Omit<DefaultOptionType, 'label'>[]>([])
+  const [priceStatus, setPriceStatus] = useState<boolean>(true);
+  const [treeElements, setTreeElements] = useState<Omit<DefaultOptionType, 'label'>[]>([]);
+  const [isNew, setIsNew] = useState<boolean>(true);
+  const [isVip, setIsVip] = useState<boolean>(true);
 
   useEffect(() => {
     (async () => {
       var result = await areaService.getAll();
       if (result.status === 200) {
-        var elements = result.data.map(x => ({ id: x.id, value: x.id, title: x.name, pId: 0 ,selectable:false}))
+        var elements = result.data.map(x => ({ id: x.id, value: x.id, title: x.name, pId: 0, selectable: false }))
         setTreeElements(elements);
       }
     })()
   }, []);
 
-  const onFinish = (advert: AdvertCreationModel) => {
-
+  const onFinish = async (advert: AdvertCreationModel) => {
     advert.categoryId = selectedCategory?.id || 0;
-    console.log(advert)
+    advert.userId = user.id;
+    advert.isNew = isNew;
+    advert.isVip = isVip;
+    var formData = new FormData();
+    Object.keys(advert).forEach(function (key) {
+      if (key === 'imageFiles') {
+        advert[key]?.forEach((x) => formData.append(key, x?.originFileObj as Blob))
+      }
+      else {
+        var value = advert[key as keyof AdvertCreationModel];
+        if (value) {
+          if (typeof (value) !== 'string')
+            formData.append(key, value.toString());
+          else
+            formData.append(key, value);
+        }
+      }
+    });
+    var result = await advertService.create(formData)
+    if (result.status === 200) {
+      message.success('Оголошення успішно опубліковано');
+      navigate(-1)
+    }
   }
 
   const getTreeNode = async (parentId: number) => {
@@ -51,9 +74,6 @@ const CreateAdvert: React.FC = () => {
     var temp = [...treeElements, ...(await getTreeNode(id))];
     setTreeElements(temp);
   }
-
-
-
 
   return (
     <>
@@ -149,11 +169,29 @@ const CreateAdvert: React.FC = () => {
           </div>
 
           <div className='white-container'>
-            <Radio.Group defaultValue="price" onChange={(e) => setPriceStatus(e.target.value)} size="large" buttonStyle="solid">
+            <h4>Додаткова інформація</h4>
+            <div className='d-flex flex-column gap-1'>
+              <h6>Стан</h6>
+              <Radio.Group defaultValue="new" onChange={(e) => setIsNew(e.target.value === 'new')} size="large" buttonStyle="solid">
+                <Radio.Button value="new">Нове</Radio.Button>
+                <Radio.Button value="old">Вживане</Radio.Button>
+              </Radio.Group>
+            </div>
+            <div className='d-flex flex-column gap-1'>
+              <h6>Статус</h6>
+              <Radio.Group defaultValue="vip" onChange={(e) => setIsVip(e.target.value === 'vip')} size="large" buttonStyle="solid">
+                <Radio.Button value="vip">VIP оголошення</Radio.Button>
+                <Radio.Button value="normal">Звичайне</Radio.Button>
+              </Radio.Group>
+            </div>
+          </div>
+
+          <div className='white-container'>
+            <Radio.Group defaultValue="price" onChange={(e) => setPriceStatus(e.target.value === 'price')} size="large" buttonStyle="solid">
               <Radio.Button value="price">Ціна</Radio.Button>
               <Radio.Button value="free">Безкоштовно</Radio.Button>
             </Radio.Group>
-            {priceStatus === 'price' &&
+            {priceStatus &&
               <>
                 <Form.Item
                   name='price'
@@ -210,11 +248,11 @@ const CreateAdvert: React.FC = () => {
           </div>
 
           <div className='d-flex justify-content-end'>
-          <Button  size='large' htmlType="submit">
+            <Button size='large' htmlType="submit">
               Опублікувати
             </Button>
           </div>
-          </Form>
+        </Form>
       </div>
     </>
   )
