@@ -2,14 +2,13 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { message } from 'antd'
 import { storageService } from '../services/storangeService';
+import user from '../stores/UserStore'
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_HOST
-export const SetupInterceptors = (clearStore:Function) => {
+export const SetupInterceptors = () => {
     axios.interceptors.request.use(
         async (config: InternalAxiosRequestConfig) => {
-            if (config.headers) {
-                config.headers['Authorization'] = `Bearer ${storageService.getAccessToken()}`;
-              }
+            config.headers['Authorization'] = `Bearer ${storageService.getAccessToken()}`;
             return config
           },
         async (error) => {
@@ -25,8 +24,9 @@ export const SetupInterceptors = (clearStore:Function) => {
         
         case 401: {
             storageService.removeTokens();
-            clearStore();
-            (window.location as Location).href = '/login';
+            user.clearUserData();
+           // (window.location as Location).href = '/login';
+           
           }
         break;
         
@@ -34,7 +34,7 @@ export const SetupInterceptors = (clearStore:Function) => {
         default: {
         //  const location = window.location.pathname.slice(1);
         //  window.location = `/error?status=${status}&title=${status}&subTitle=${error.message}&location=${location === '' ? 'main' : 'notmain'}`;
-          message.error(error.message)
+        message.error(`${error.status} ${error.message}`)
         //   if (error?.response?.data) {
         //     if (error.response.data.message) {
         //       message.error(error.response.data.message);
@@ -45,9 +45,11 @@ export const SetupInterceptors = (clearStore:Function) => {
         //     }
         //   }
 
-          return Promise.reject(error);
+          
         }
+        
       }
+      return Promise.reject(error);
    }
   );
 }

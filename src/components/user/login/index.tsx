@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import { LoginModel } from '../../models/LoginModel';
-import { accountService } from '../../services/accountService';
-import BackButton from '../common-components/BackButton';
-import { Button, Checkbox, Divider, Form, Input } from 'antd';
+import { LoginModel } from '../../../models/LoginModel';
+import { accountService } from '../../../services/accountService';
+import BackButton from '../../common-components/BackButton';
+import { Button, Checkbox, Divider, Form, Input, message } from 'antd';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
-import { storageService } from '../../services/storangeService';
-import { observer } from 'mobx-react';
-import user from '../../stores/UserStore'
+import { storageService } from '../../../services/storangeService';
+import user from '../../../stores/UserStore'
 
 export const Login: React.FC =() => {
     const [remember, setRemember] = useState<boolean>(false);
@@ -24,6 +23,7 @@ export const Login: React.FC =() => {
             }
             user.setUserData(responce.data.accessToken)
             navigate('/')
+            message.success('Ви успішно увійшли в свій акаунт')
         }
     }
     return (

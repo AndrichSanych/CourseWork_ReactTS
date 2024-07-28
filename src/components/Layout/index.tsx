@@ -1,14 +1,14 @@
 // src/components/Layout.tsx
 import React from 'react';
-import Header from './header';
-import Footer from './footer';
-import MainContent from './main_content';
+import Footer from './Footer';
+import Header from './Header';
+import MainContent from './Content';
 
 const Layout: React.FC = () => {
     return (
-        <div>
+        <div className=' bg-main'>
             <Header />
-            <div className="container">
+            <div className="mx-auto w-80">
                  <MainContent />
             </div>
             <Footer />
