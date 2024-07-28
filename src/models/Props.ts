@@ -1,3 +1,4 @@
+import { AdvertModel } from "./AdvertModel"
 import { CategoryModel } from "./CategoryModel"
 
 export interface SearchProps {
@@ -7,7 +8,12 @@ export interface SearchProps {
     onSearch?: Function
 }
 
-export interface CategoryViewProps{
+export interface CategoryViewProps {
     category: CategoryModel
-    onClick?:Function
-  }
+    onClick?: Function
+}
+
+export interface AdvertViewProps{
+    advert: AdvertModel
+    onClick?: Function
+}

@@ -25,6 +25,7 @@ const CreateAdvert: React.FC = () => {
   const [treeElements, setTreeElements] = useState<TreeElement[]>([]);
   const [isNew, setIsNew] = useState<boolean>(true);
   const [isVip, setIsVip] = useState<boolean>(true);
+  const [publishing, setPublishing] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -37,6 +38,7 @@ const CreateAdvert: React.FC = () => {
   }, []);
 
   const onFinish = async (advert: AdvertCreationModel) => {
+    setPublishing(true);
     advert.categoryId = selectedCategory?.id || 0;
     advert.userId = user.id;
     advert.isNew = isNew;
@@ -61,6 +63,7 @@ const CreateAdvert: React.FC = () => {
       message.success('Оголошення успішно опубліковано');
       navigate(-1)
     }
+    setPublishing(false);
   }
 
   const getTreeNode = async (parentId: number) => {
@@ -250,7 +253,7 @@ const CreateAdvert: React.FC = () => {
           </div>
 
           <div className='d-flex justify-content-end'>
-            <Button size='large' htmlType="submit">
+            <Button loading={publishing} size='large' htmlType="submit">
               Опублікувати
             </Button>
           </div>

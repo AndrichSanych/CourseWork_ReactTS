@@ -135,3 +135,14 @@ footer {
   color: white;
 }
 
+.vip-advert-container{
+  display: flex;
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 75%;
+  flex-wrap: wrap;
+ 
+
+}
+

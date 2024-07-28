@@ -11,4 +11,5 @@ export interface AdvertModel {
     isVip: boolean
     isContractPrice: boolean
     price: number
+    firstImage:string
 }
