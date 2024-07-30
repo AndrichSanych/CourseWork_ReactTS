@@ -1,13 +1,10 @@
 import React from 'react'
-import { CategoryModel } from '../../../models/CategoryModel'
 import { Avatar } from 'antd';
+import { CategoryViewProps } from '../../../models/Props';
 
 const imagesUrl = (process.env.REACT_APP_SERVER_HOST || '') + process.env.REACT_APP_IMAGES_FOLDER;
 
-interface CategoryViewProps{
-  category: CategoryModel
-  onClick?:Function
-}
+
 
 const CategoryView: React.FC<CategoryViewProps> = ({category,onClick}) => {
   return (

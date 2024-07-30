@@ -1,5 +1,5 @@
 import { Button, Modal } from "antd"
-import CategoryView from "../category-view"
+import CategoryView from "../category-view-h"
 import { useEffect, useState } from "react";
 import CategoriesGrid from "../categories-grid";
 import { CategoryModel } from "../../../models/CategoryModel";

@@ -25,7 +25,7 @@ export const SetupInterceptors = () => {
         case 401: {
             storageService.removeTokens();
             user.clearUserData();
-           // (window.location as Location).href = '/login';
+            (window.location as Location).href = '/login';
            
           }
         break;

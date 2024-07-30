@@ -1,3 +1,5 @@
+import { GetProp, TreeSelectProps } from "antd";
+
 export const formPostConfig = {
     headers: {
         'Content-type': 'multipart/form-data'
@@ -8,3 +10,4 @@ export const postBodyConfig = {
        'Content-type': 'application/json'
      }
 }
+

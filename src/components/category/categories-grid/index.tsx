@@ -1,6 +1,6 @@
 import React from 'react'
 import { CategoryModel } from '../../../models/CategoryModel'
-import CategoryView from '../category-view'
+import CategoryView from '../category-view-h'
 import { Col, Row } from 'antd'
 
 interface CategoryGridProps{
