@@ -6,5 +6,6 @@ const accountsAPIUrl = process.env.REACT_APP_ACCOUNT_API_URL;
 export const accountService = {
 
     login: (model:LoginModel) =>  axios.post(accountsAPIUrl + '/login',  model ,formPostConfig),
-    register:(user:UserRegisterModel)=> axios.post(accountsAPIUrl + '/user/register', user,formPostConfig)
+    register:(user:UserRegisterModel)=> axios.post(accountsAPIUrl + '/user/register', user,formPostConfig),
+    toggleFavorite:(id:number)=> axios.post(accountsAPIUrl + `/togglefavorite/${id}`),
 }

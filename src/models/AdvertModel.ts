@@ -1,10 +1,11 @@
 export interface AdvertModel {
+    id:number
     userId: string
     cityId: number
     cityName: string
     categoryId: number
     categoryName: string
-    date: Date
+    date: string
     title: string
     description: string
     isNew: boolean
@@ -12,4 +13,5 @@ export interface AdvertModel {
     isContractPrice: boolean
     price: number
     firstImage:string
+    userFavorites:string[]
 }

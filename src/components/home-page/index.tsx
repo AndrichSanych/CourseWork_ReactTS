@@ -9,6 +9,8 @@ import { AdvertModel } from '../../models/AdvertModel';
 import { advertService } from '../../services/advertService';
 import axios from 'axios';
 import SmallAdvertView from '../advert/advert-viewer-small';
+import { Col, Row } from 'antd';
+
 
 const HomePage: React.FC = () => {
   const [categories, setCategories] = useState<CategoryModel[]>([]);
@@ -20,7 +22,7 @@ const HomePage: React.FC = () => {
       const [categs, vips] = await axios.all(
         [
           categoryService.getAll(),
-          advertService.getVip(5)
+          advertService.getVip(12)
         ])
       if (categs.status === 200)
         setCategories(categs.data)
@@ -44,16 +46,35 @@ const HomePage: React.FC = () => {
       <Search onSearch={onSearch} />
       <div className='white-container my-5'>
         <span className='mx-auto py-4 fw-bold fs-2'>Розділи на сервісі OLX</span>
-        <div className='d-flex flex-wrap gap-4 w-75 mx-auto'>
-          {categories.map(x => <CategoryViewVertical category={x} key={x.id} onClick={categorySelect} />)}
-        </div>
+        <Row className='p-3 w-75 mx-auto'>
+          {categories && categories.map((x, index) =>
+            <Col
+              sm={{ span: 12 }}
+              md={{ span: 8}}
+              lg={{ span: 6 }}
+              xl={{ span: 4 }}
+              xxl={{ span: 3 }}
+              key={index}>
+                  <CategoryViewVertical category={x} key={x.id} onClick={categorySelect} />
+            </Col>
+          )}
+        </Row>
       </div>
       <div className='my-5 text-center'>
         <h3 className='py-4 fw-bold fs-2'>VIP оголошення</h3>
-        <div className='vip-advert-container'>
-          {vipAdverts.map(x => <SmallAdvertView advert={x} />)}
-        </div>
-
+        <Row className='p-3 w-75 mx-auto' gutter={[10,10]}>
+          {vipAdverts && vipAdverts.map((x, index) =>
+            <Col
+              style={{display: 'flex'}}
+              sm={{ span: 24 }}
+              md={{ span: 12}}
+              lg={{ span: 8 }}
+              xl={{ span: 6 }}
+              key={index}>
+                  <SmallAdvertView key={x.id} advert={x} />
+            </Col>
+          )}
+        </Row>
       </div>
     </div>
   )
