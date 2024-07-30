@@ -1,4 +1,5 @@
 import { GetProp, UploadFile, UploadProps } from "antd";
+import { FilterModel } from "../models/FilterModel";
 
 export type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -16,3 +17,18 @@ export const reorder = (list: UploadFile[], startIndex: number, endIndex: number
     result.splice(endIndex, 0, removed);
     return result;
  };
+
+export const getQueryString = (filter:FilterModel):string =>{
+    var result = '';
+    Object.keys(filter).forEach((key)  => {
+      if(filter[key as keyof FilterModel]){
+        if(result===''){
+          result+=`?${key}=${filter[key as keyof FilterModel]}`
+        }
+        else{
+          result+=`&${key}=${filter[key as keyof FilterModel]}`
+        }
+      }
+    });
+    return result;
+} 
