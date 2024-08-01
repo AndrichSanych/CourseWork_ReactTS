@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { getQueryString } from '../../helpers/common-methods';
 
-import { FullFilterModel } from '../../models/FilterModel';
+import { FilterModel } from '../../models/FilterModel';
 import StartContent from './start-content';
 
 
@@ -19,13 +19,17 @@ const HomePage: React.FC = () => {
 
   const [searchParams, setSearchParams] = useSearchParams('');
   const [adverts, setAdverts] = useState<AdvertModel[]>([]);
-  const [filter, setFilter] = useState<FullFilterModel>(
+  const [filter, setFilter] = useState<FilterModel>(
     {
       cityId: Number(searchParams.get("cityId")) || undefined,
       areaId: Number(searchParams.get("areaId")) || undefined,
       search: searchParams.get("search") || undefined,
       categoryId: Number(searchParams.get("categoryId")) || undefined,
       isNew: Boolean(searchParams.get("isNew")) || undefined,
+      isVip: Boolean(searchParams.get("isVip")) || undefined,
+      isContractPrice: Boolean(searchParams.get("isContractPrice")) || undefined,
+      priceFrom:Number(searchParams.get("priceFrom")) || undefined,
+      priceTo:Number(searchParams.get("priceTo")) || undefined,
     }
   )
 
@@ -57,7 +61,7 @@ const HomePage: React.FC = () => {
     })()
   }, [])
 
-  const onSearch = (searchFilter: FullFilterModel) => {
+  const onSearch = (searchFilter: FilterModel) => {
     if (location.pathname === '/') {
       navigate(`/main-search`);
     }

@@ -1,10 +1,10 @@
 import { ReactElement } from "react"
 import { AdvertModel } from "./AdvertModel"
 import { CategoryModel } from "./CategoryModel"
-import { FilterModel, FullFilterModel } from "./FilterModel"
+import { FilterModel} from "./FilterModel"
 
 export interface SearchProps {
-    filter?:FullFilterModel
+    filter?:FilterModel
     isFilter?:boolean
     onSearch?: Function
     categories?:CategoryModel[]

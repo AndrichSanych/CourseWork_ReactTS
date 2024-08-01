@@ -1,6 +1,6 @@
 import { EnvironmentOutlined, SearchOutlined, SmileOutlined } from '@ant-design/icons'
-import { Col, Form, Input, Row, Select, Spin, TreeSelect, TreeSelectProps } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { Col, Form, Input, InputNumber, Row, Select, Space, Spin, TreeSelect, TreeSelectProps } from 'antd'
+import React, {FocusEvent, useEffect, useState } from 'react'
 import '../search/Search.css'
 import { areaService } from '../../services/areaService'
 import { cityService } from '../../services/cityService'
@@ -31,7 +31,6 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
             }
             setLoading(false)
         })()
-
     }, []);
 
     useEffect(() => {
@@ -83,7 +82,23 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
     const onStateChange = (state: boolean) => {
         onSearch({ ...filter, isNew: state })
     }
+    const onVipChange = (state: boolean) => {
+        onSearch({ ...filter, isVip: state })
+    }
+    const onContractPriceChange = (state: boolean) => {
+        onSearch({ ...filter, isContractPrice: state })
+    }
 
+    const onPriceFromChange = (value:FocusEvent<HTMLInputElement>) => {
+        onSearch({ ...filter, priceFrom: value.target.value })
+    }
+
+    const onPriceToChange = (value:FocusEvent<HTMLInputElement>) => {
+        onSearch({ ...filter, priceTo: value.target.value })
+    }
+
+    
+    
     return (
         <>
             <Form
@@ -113,7 +128,7 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                             name='placeId'
                         >
                             {loading
-                                ? <Spin className=' align-self-center mx-auto' size='small' spinning={loading} />
+                                ? <Spin className=' align-self-center mx-auto' size='small' spinning />
                                 : <TreeSelect
                                     loading={loading}
                                     showSearch
@@ -155,18 +170,39 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                                     <div className='filter-item-container'>
                                         <span>Kатегорія</span>
                                         <div className='filter-element-container'>
-                                            <Select
-                                                allowClear
-                                                defaultValue={filter?.categoryId}
-                                                placeholder='Категорія'
-                                                className='w-100 filter-element'
-                                                size='large'
-                                                options={categories?.map(x => ({ value: x.id, label: x.name }))}
-                                                onChange={onCategoryChange} />
+                                            {categories?.length === 0
+                                                ? <Spin spinning size='small' className='align-self-center mx-auto' />
+                                                : <Select
+                                                    allowClear
+                                                    defaultValue={filter?.categoryId}
+                                                    placeholder='Категорія'
+                                                    className='w-100 filter-element'
+                                                    size='large'
+                                                    options={categories?.map(x => ({ value: x.id, label: x.name }))}
+                                                    onChange={onCategoryChange} />}
+
                                         </div>
                                     </div>
                                 </Col>
-                                <Col span={6}>
+                                <Col span={4}>
+                                    <div className='filter-item-container'>
+                                        <span>Договірна ціна</span>
+                                        <div className='filter-element-container'>
+                                            <Select
+                                                defaultValue={filter?.isContractPrice}
+                                                placeholder='Договірна ціна'
+                                                className='w-100 filter-element'
+                                                size='large'
+                                                allowClear
+                                                options={
+                                                    [{ value: true, label: 'Договірна' },
+                                                    { value: false, label: 'Не договірна' }]
+                                                }
+                                                onChange={onContractPriceChange} />
+                                        </div>
+                                    </div>
+                                </Col>
+                                <Col span={4}>
                                     <div className='filter-item-container'>
                                         <span>Стан</span>
                                         <div className='filter-element-container'>
@@ -175,13 +211,58 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                                                 placeholder='Стан'
                                                 className='w-100 filter-element'
                                                 size='large'
+                                                allowClear
                                                 options={
-                                                    [{ value: null, label: 'Всі оголошення' },
-                                                    { value: true, label: 'Нове' },
+                                                    [{ value: true, label: 'Нове' },
                                                     { value: false, label: 'Вживане' }]
                                                 }
                                                 onChange={onStateChange} />
                                         </div>
+                                    </div>
+                                </Col>
+                                <Col span={4}>
+                                    <div className='filter-item-container'>
+                                        <span>VIP оголошення</span>
+                                        <div className='filter-element-container'>
+                                            <Select
+                                                defaultValue={filter?.isVip}
+                                                placeholder='VIP оголошення'
+                                                className='w-100 filter-element'
+                                                size='large'
+                                                allowClear
+                                                options={
+                                                    [{ value: true, label: 'Vip' },
+                                                    { value: false, label: 'Звичайне' }]
+                                                }
+                                                onChange={onVipChange} />
+                                        </div>
+                                    </div>
+                                </Col>
+                                <Col span={4}>
+                                    <div className='filter-item-container'>
+                                        <span>Діапазон цін</span>
+                                        <Space>
+                                        <div className='filter-element-container'>
+                                            <InputNumber
+                                                defaultValue={filter?.priceFrom}
+                                                placeholder='Від'
+                                                className='w-100 filter-element no-border'
+                                                size='large'
+                                                onBlur={onPriceFromChange}  
+                                               
+                                                />
+                                        </div>
+                                        <div className='filter-element-container'>
+                                            <InputNumber
+                                                defaultValue={filter?.priceTo}
+                                                placeholder='До'
+                                                className='w-100 filter-element no-border'
+                                                size='large'
+                                                onBlur={onPriceToChange}
+                                                />
+                                        </div>
+                                        </Space>
+                                        
                                     </div>
                                 </Col>
                             </Row>

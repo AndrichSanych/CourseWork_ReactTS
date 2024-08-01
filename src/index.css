@@ -151,9 +151,11 @@ footer {
 }
 
 .filter-element-container{
+  display: flex;
   padding: 5px 0 5px 0;
   border-radius: 3px;
   background-color: white;
+  height: 50px;
 }
 .filter-element >.ant-select-selector {
     border: none !important;
