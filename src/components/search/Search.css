@@ -1,17 +1,20 @@
-.no-border {
-    border: none ;
+.no-border{
+    border: none !important;
+    box-shadow: none !important;
     font-size: 18px;
+   
+}
+:where(.css-dev-only-do-not-override-p8b6i).ant-input-affix-wrapper >input.ant-input{
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: inherit;
     font-weight: 600;
 }
-.no-border:focus {
-     outline: none;
-}
-
-.search-tree > .ant-select-selector
+.search-tree >.ant-select-selector
 {
     border: none !important;
     box-shadow: none !important;
-}
+} 
 
 .search-container{
     width: 70%;

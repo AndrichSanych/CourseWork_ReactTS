@@ -12,6 +12,7 @@ import Layout from './components/Layout';
 import CreateAdvert from './components/advert/create-advert';
 
 
+
 const App: React.FC = () => {
   return (
     <Routes>
@@ -29,6 +30,7 @@ const App: React.FC = () => {
         <Route path="/useradverts" element={
           <UserProtectedRoute children={<UserAdverts />} />
         } />
+        <Route path='/main-search' element={<HomePage />} />
         <Route path='/registration' element={<Registration />} />
         <Route path='/login' element={<Login />} />
         <Route path="*" element={
