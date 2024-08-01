@@ -6,9 +6,11 @@ import { StartContentProps } from '../../../models/Props'
 import { AdvertModel } from '../../../models/AdvertModel'
 import axios from 'axios'
 import { advertService } from '../../../services/advertService'
+import { useNavigate } from 'react-router-dom'
 
 const StartContent:React.FC<StartContentProps> = ({categories,onCategorySelect = ()=>{}}) => {
   const [vipAdverts, setVipAdverts] = useState<AdvertModel[]>([]);
+  const navigate = useNavigate();
   useEffect(() => {
     (async () => {
       const [vips] = await axios.all(
@@ -49,7 +51,7 @@ const StartContent:React.FC<StartContentProps> = ({categories,onCategorySelect =
             lg={{ span: 8 }}
             xl={{ span: 6 }}
             key={index}>
-            <SmallAdvertView key={x.id} advert={x} />
+            <SmallAdvertView key={x.id} onClick={(advertId:number)=>navigate(`/advert?id=${advertId}`)} advert={x} />
           </Col>
         )}
       </Row>

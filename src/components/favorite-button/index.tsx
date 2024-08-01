@@ -23,7 +23,8 @@ const FavoriteButton: React.FC<AdvertModel> = observer((advert: AdvertModel) => 
         }
     }, [user.isAuthorized,advert])
 
-    const favoriteClick = async () => {
+    const favoriteClick = async (e:any) => {
+        e.stopPropagation();
         if (user.isAuthorized) {
             const result = await accountService.toggleFavorite(advert.id)
             if (result.status !== 200) {
@@ -39,8 +40,8 @@ const FavoriteButton: React.FC<AdvertModel> = observer((advert: AdvertModel) => 
     return (
         <>
             {favorite
-                ? <HeartFilled className=' ms-3 fs-5 text-danger' onClick={() => favoriteClick()} />
-                : <HeartOutlined className=' ms-3 fs-5' onClick={() => favoriteClick()} />}
+                ? <HeartFilled className=' ms-3 fs-5 text-danger' onClick={favoriteClick} />
+                : <HeartOutlined className=' ms-3 fs-5' onClick={favoriteClick} />}
         </>
 
     )

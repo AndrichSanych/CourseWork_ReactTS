@@ -7,8 +7,9 @@ import { AdvertModel } from '../../models/AdvertModel';
 import axios from 'axios';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { getQueryString } from '../../helpers/common-methods';
-import StartContent from './start-content/StartContent';
+
 import { FullFilterModel } from '../../models/FilterModel';
+import StartContent from './start-content';
 
 
 const HomePage: React.FC = () => {
@@ -30,7 +31,7 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     const queryString = getQueryString(filter);
-    if(queryString !== '')
+    if(queryString !== '' || location.pathname !== '/')
        setSearchParams(queryString)
   }, [filter])
 
