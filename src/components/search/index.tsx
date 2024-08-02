@@ -93,9 +93,9 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
         onSearch({ ...filter, priceTo: value.target.value })
     }
 
-    
-    const onFiltersChange = (data:FilterData)=>{
-         onSearch({ ...filter, filterValues: data })
+
+    const onFiltersChange = (data: FilterData) => {
+        onSearch({ ...filter, filterValues: data })
     }
 
     return (
@@ -295,7 +295,12 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                                     </div>
                                 </Col>
                                 {filter?.categoryId
-                                    && <Filters onChange={onFiltersChange} values={filter.filterValues} bordered={false} child={true} categoryId={filter.categoryId} />}
+                                    && <Filters
+                                        onChange={onFiltersChange}
+                                        values={filter.filterValues}
+                                        bordered={false}
+                                        child={true}
+                                        categoryId={filter.categoryId} />}
                             </Row>
                         </div>
 

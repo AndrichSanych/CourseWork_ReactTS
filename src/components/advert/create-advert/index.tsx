@@ -28,6 +28,7 @@ const CreateAdvert: React.FC = () => {
   const [isVip, setIsVip] = useState<boolean>(true);
   const [publishing, setPublishing] = useState<boolean>(false);
   const [filterValues, setFilterValues] = useState<FilterData[]>([]);
+  const [contractPrice, setContractPrice] = useState<boolean>(false);
 
 
   useEffect(() => {
@@ -42,8 +43,8 @@ const CreateAdvert: React.FC = () => {
 
 
   const onFinish = async (advert: AdvertCreationModel) => {
-    console.log(advert)
     setPublishing(true);
+    advert.isContractPrice = contractPrice;
     advert.categoryId = selectedCategory?.id || 0;
     advert.userId = user.id;
     advert.isNew = isNew;
@@ -53,7 +54,7 @@ const CreateAdvert: React.FC = () => {
       if (key === 'imageFiles') {
         advert[key]?.forEach((x) => formData.append(key, x?.originFileObj as Blob))
       } else if (key === 'filterValues') {
-        advert[key]?.forEach((x) => formData.append(key, x.valueId?.toString()||''))
+        advert[key]?.forEach((x) => formData.append(key, x.valueId?.toString() || ''))
       }
       else {
         var value = advert[key as keyof AdvertCreationModel];
@@ -86,7 +87,6 @@ const CreateAdvert: React.FC = () => {
     var temp = [...treeElements, ...(await getTreeNode(id))];
     setTreeElements(temp as TreeElement[]);
   }
-
 
   return (
     <>
@@ -145,7 +145,12 @@ const CreateAdvert: React.FC = () => {
                 name="filterValues"
                 label={<h6>Характеристики</h6>}
               >
-                <Filters values={filterValues} child={false} bordered = {true} onChange={setFilterValues} categoryId={selectedCategory.id} />
+                <Filters
+                  values={filterValues}
+                  child={false}
+                  bordered={true}
+                  onChange={setFilterValues}
+                  categoryId={selectedCategory.id} />
               </Form.Item>
             </div>
 
@@ -228,14 +233,10 @@ const CreateAdvert: React.FC = () => {
                   ]}>
                   <InputNumber addonAfter="грн." size='large' />
                 </Form.Item>
-
-                <Form.Item
-                  name='isContractPrice'>
-                  <div style={{ width: 250 }} className='d-flex justify-content-between' >
-                    <h6>Договірна</h6>
-                    <Switch defaultValue={false} />
-                  </div>
-                </Form.Item>
+                <div style={{ width: 250 }} className='d-flex justify-content-between' >
+                  <h6>Договірна</h6>
+                  <Switch defaultValue={false} onChange={setContractPrice}/>
+                </div>
               </>
             }
           </div>
@@ -267,6 +268,13 @@ const CreateAdvert: React.FC = () => {
                     <p>Дані не знайдені</p>
                   </div>
                 }
+                filterTreeNode={(search, item) => {
+                  var res = false;
+                  if (item.title) {
+                      res = item.title?.toLocaleString()?.toLocaleLowerCase()?.indexOf(search.toLowerCase()) >= 0;
+                  }
+                  return res;
+              }}
               />
             </Form.Item>
           </div>
