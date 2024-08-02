@@ -5,11 +5,7 @@ import Dragger from 'antd/es/upload/Dragger';
 import { InboxOutlined } from '@ant-design/icons';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import SortedImage from './SortedImage';
-
-interface ImageLoaderProps {
-  files: UploadFile[]
-  onChange?: Function
-}
+import { ImageLoaderProps } from '../../models/Props';
 
 const ImageUpload: React.FC<ImageLoaderProps> = ({ files, onChange = () => { } }) => {
 

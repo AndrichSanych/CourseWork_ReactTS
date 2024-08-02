@@ -1,12 +1,13 @@
 import { EnvironmentOutlined, SearchOutlined, SmileOutlined } from '@ant-design/icons'
 import { Col, Form, Input, InputNumber, Row, Select, Space, Spin, TreeSelect, TreeSelectProps } from 'antd'
-import React, {FocusEvent, useEffect, useState } from 'react'
-import '../search/Search.css'
+import React, { FocusEvent, useEffect, useState } from 'react'
+import './Search.css'
 import { areaService } from '../../services/areaService'
 import { cityService } from '../../services/cityService'
 import { CityModel } from '../../models/CityModel'
 import { TreeElement } from '../../models/Models'
 import { SearchProps } from '../../models/Props'
+import Filters from '../filters'
 
 
 interface SearchData {
@@ -89,16 +90,16 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
         onSearch({ ...filter, isContractPrice: state })
     }
 
-    const onPriceFromChange = (value:FocusEvent<HTMLInputElement>) => {
+    const onPriceFromChange = (value: FocusEvent<HTMLInputElement>) => {
         onSearch({ ...filter, priceFrom: value.target.value })
     }
 
-    const onPriceToChange = (value:FocusEvent<HTMLInputElement>) => {
+    const onPriceToChange = (value: FocusEvent<HTMLInputElement>) => {
         onSearch({ ...filter, priceTo: value.target.value })
     }
 
-    
-    
+
+
     return (
         <>
             <Form
@@ -162,11 +163,17 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
             </Form>
             {isFilter &&
                 <div className='mt-5'>
-                    <div className='w-70 mx-auto my-5'>
+                    <div className=' w-70 mx-auto my-5'>
                         <h3>Фільтри</h3>
                         <div>
-                            <Row gutter={15}>
-                                <Col span={6}>
+                            <Row gutter={[16, 16]}>
+                                <Col
+                                    sm={{ span: 24 }}
+                                    md={{ span: 24 }}
+                                    lg={{ span: 12 }}
+                                    xl={{ span: 8 }}
+                                    xxl={{ span: 5 }}
+                                    key={'categiry'}>
                                     <div className='filter-item-container'>
                                         <span>Kатегорія</span>
                                         <div className='filter-element-container'>
@@ -184,7 +191,13 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                                         </div>
                                     </div>
                                 </Col>
-                                <Col span={4}>
+                                <Col
+                                    sm={{ span: 24 }}
+                                    md={{ span: 24 }}
+                                    lg={{ span: 12 }}
+                                    xl={{ span: 8 }}
+                                    xxl={{ span: 5 }}
+                                    key={'c-price'}>
                                     <div className='filter-item-container'>
                                         <span>Договірна ціна</span>
                                         <div className='filter-element-container'>
@@ -202,7 +215,13 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                                         </div>
                                     </div>
                                 </Col>
-                                <Col span={4}>
+                                <Col
+                                    sm={{ span: 24 }}
+                                    md={{ span: 24 }}
+                                    lg={{ span: 12 }}
+                                    xl={{ span: 8 }}
+                                    xxl={{ span: 5 }}
+                                    key={'state'}>
                                     <div className='filter-item-container'>
                                         <span>Стан</span>
                                         <div className='filter-element-container'>
@@ -220,7 +239,13 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                                         </div>
                                     </div>
                                 </Col>
-                                <Col span={4}>
+                                <Col
+                                    sm={{ span: 24 }}
+                                    md={{ span: 24 }}
+                                    lg={{ span: 12 }}
+                                    xl={{ span: 8 }}
+                                    xxl={{ span: 5 }}
+                                    key={'vip'}>
                                     <div className='filter-item-container'>
                                         <span>VIP оголошення</span>
                                         <div className='filter-element-container'>
@@ -238,35 +263,44 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                                         </div>
                                     </div>
                                 </Col>
-                                <Col span={4}>
+                                <Col
+                                    sm={{ span: 24 }}
+                                    md={{ span: 24 }}
+                                    lg={{ span: 12 }}
+                                    xl={{ span: 6 }}
+                                    xxl={{ span: 4 }}
+                                    key={'c-price'}>
                                     <div className='filter-item-container'>
                                         <span>Діапазон цін</span>
                                         <Space>
-                                        <div className='filter-element-container'>
-                                            <InputNumber
-                                                defaultValue={filter?.priceFrom}
-                                                placeholder='Від'
-                                                className='w-100 filter-element no-border'
-                                                size='large'
-                                                onBlur={onPriceFromChange}  
-                                               
+                                            <div className='filter-element-container'>
+                                                <InputNumber
+                                                    defaultValue={filter?.priceFrom}
+                                                    placeholder='Від'
+                                                    className='w-100 filter-element no-border'
+                                                    size='large'
+                                                    onBlur={onPriceFromChange}
+
                                                 />
-                                        </div>
-                                        <div className='filter-element-container'>
-                                            <InputNumber
-                                                defaultValue={filter?.priceTo}
-                                                placeholder='До'
-                                                className='w-100 filter-element no-border'
-                                                size='large'
-                                                onBlur={onPriceToChange}
+                                            </div>
+                                            <div className='filter-element-container'>
+                                                <InputNumber
+                                                    defaultValue={filter?.priceTo}
+                                                    placeholder='До'
+                                                    className='w-100 filter-element no-border'
+                                                    size='large'
+                                                    onBlur={onPriceToChange}
                                                 />
-                                        </div>
+                                            </div>
                                         </Space>
-                                        
+
                                     </div>
                                 </Col>
+                                {filter?.categoryId
+                                    && <Filters bordered={false} row={false} categoryId={filter.categoryId} />}
                             </Row>
                         </div>
+
                     </div>
                 </div>}
         </>

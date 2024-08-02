@@ -1,6 +1,5 @@
 
 import React, { useEffect, useState } from 'react'
-import Search from '../search'
 import { CategoryModel } from '../../models/CategoryModel';
 import { categoryService } from '../../services/categoryService';
 import { AdvertModel } from '../../models/AdvertModel';
@@ -10,6 +9,7 @@ import { getQueryString } from '../../helpers/common-methods';
 
 import { FilterModel } from '../../models/FilterModel';
 import StartContent from './start-content';
+import Search from '../search';
 
 
 const HomePage: React.FC = () => {

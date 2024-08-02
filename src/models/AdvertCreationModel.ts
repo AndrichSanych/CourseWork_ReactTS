@@ -1,4 +1,5 @@
 import { UploadFile } from "antd"
+import { FilterData } from "./Models"
 
 export interface AdvertCreationModel{
      userId:string
@@ -11,5 +12,6 @@ export interface AdvertCreationModel{
      isContractPrice:boolean
      price:number 
      imageFiles:(UploadFile | undefined)[]
+     filterValues:FilterData[]
     
 }

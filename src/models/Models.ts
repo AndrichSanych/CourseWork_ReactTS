@@ -6,3 +6,8 @@ export interface TreeElement{
     selectable: boolean ;
     key:any
 }
+
+export interface FilterData{
+    valueId:number|undefined
+    filterId:number
+}
