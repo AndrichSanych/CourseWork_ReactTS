@@ -6,10 +6,10 @@ import { AdvertModel } from '../../models/AdvertModel';
 import axios from 'axios';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { getQueryString } from '../../helpers/common-methods';
-
 import { FilterModel } from '../../models/FilterModel';
 import StartContent from './start-content';
 import Search from '../search';
+import { FilterData } from '../../models/Models';
 
 
 const HomePage: React.FC = () => {
@@ -28,15 +28,16 @@ const HomePage: React.FC = () => {
       isNew: Boolean(searchParams.get("isNew")) || undefined,
       isVip: Boolean(searchParams.get("isVip")) || undefined,
       isContractPrice: Boolean(searchParams.get("isContractPrice")) || undefined,
-      priceFrom:Number(searchParams.get("priceFrom")) || undefined,
-      priceTo:Number(searchParams.get("priceTo")) || undefined,
+      priceFrom: Number(searchParams.get("priceFrom")) || undefined,
+      priceTo: Number(searchParams.get("priceTo")) || undefined,
+      filterValues: searchParams.get("filterValues") ? (JSON.parse(searchParams.get("filterValues") || '') as FilterData[]) : undefined
     }
   )
 
   useEffect(() => {
     const queryString = getQueryString(filter);
-    if(queryString !== '' || location.pathname !== '/')
-       setSearchParams(queryString)
+    if (queryString !== '' || location.pathname !== '/')
+      setSearchParams(queryString)
   }, [filter])
 
   useEffect(() => {
@@ -44,11 +45,11 @@ const HomePage: React.FC = () => {
 
   }, [searchParams])
 
-  useEffect(()=>{
-    if(location.pathname==='/'){
-      setFilter({ })
+  useEffect(() => {
+    if (location.pathname === '/') {
+      setFilter({})
     }
-  },[location])
+  }, [location])
 
   useEffect(() => {
     (async () => {

@@ -21,7 +21,7 @@ const SmallAdvertView: React.FC<AdvertViewProps> = ({ advert, onClick = () => { 
                             <h6 className=' fw-light text-wrap'>{advert.title}</h6>
                             <FavoriteButton {...advert} />
                         </div>
-                        <h5>{advert.price === 0 ? 'Безкоштовно' : advert.price} грн. {advert.isContractPrice ? '(Договірна)' : ''}</h5>
+                        <h5>{advert.price === 0 ? 'Безкоштовно' : advert.price + ' грн.'}  {advert.isContractPrice ? '(Договірна)' : ''}</h5>
                     </div>
                     <div className='d-flex flex-column text-start mt-auto'>
                         <span>{advert.cityName}</span>

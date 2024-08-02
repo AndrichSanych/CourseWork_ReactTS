@@ -5,15 +5,9 @@ import './Search.css'
 import { areaService } from '../../services/areaService'
 import { cityService } from '../../services/cityService'
 import { CityModel } from '../../models/CityModel'
-import { TreeElement } from '../../models/Models'
+import { FilterData, SearchData, TreeElement } from '../../models/Models'
 import { SearchProps } from '../../models/Props'
 import Filters from '../filters'
-
-
-interface SearchData {
-    searchString: string
-    placeId: number
-}
 
 
 const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { }, categories }) => {
@@ -76,7 +70,8 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
     const onCategoryChange = (id: number) => {
         onSearch({
             ...filter,
-            categoryId: id
+            categoryId: id,
+            filterValues: id ? filter?.filterValues : []
         })
     }
 
@@ -98,7 +93,10 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
         onSearch({ ...filter, priceTo: value.target.value })
     }
 
-
+    
+    const onFiltersChange = (data:FilterData)=>{
+         onSearch({ ...filter, filterValues: data })
+    }
 
     return (
         <>
@@ -267,9 +265,9 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                                     sm={{ span: 24 }}
                                     md={{ span: 24 }}
                                     lg={{ span: 12 }}
-                                    xl={{ span: 6 }}
+                                    xl={{ span: 8 }}
                                     xxl={{ span: 4 }}
-                                    key={'c-price'}>
+                                    key={'d-price'}>
                                     <div className='filter-item-container'>
                                         <span>Діапазон цін</span>
                                         <Space>
@@ -297,7 +295,7 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                                     </div>
                                 </Col>
                                 {filter?.categoryId
-                                    && <Filters bordered={false} row={false} categoryId={filter.categoryId} />}
+                                    && <Filters onChange={onFiltersChange} values={filter.filterValues} bordered={false} child={true} categoryId={filter.categoryId} />}
                             </Row>
                         </div>
 

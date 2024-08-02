@@ -1,3 +1,5 @@
+import { FilterData } from "./Models"
+
 export interface FilterModel {
     categoryId?: number
     isNew?: boolean
@@ -8,6 +10,5 @@ export interface FilterModel {
     areaId?: number
     priceFrom?:number
     priceTo?:number
-
-
+    filterValues?:FilterData[]
 }

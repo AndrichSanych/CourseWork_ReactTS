@@ -145,7 +145,7 @@ const CreateAdvert: React.FC = () => {
                 name="filterValues"
                 label={<h6>Характеристики</h6>}
               >
-                <Filters values={filterValues} row={true} bordered = {true} onChange={setFilterValues} categoryId={selectedCategory.id} />
+                <Filters values={filterValues} child={false} bordered = {true} onChange={setFilterValues} categoryId={selectedCategory.id} />
               </Form.Item>
             </div>
 

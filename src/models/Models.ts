@@ -11,3 +11,8 @@ export interface FilterData{
     valueId:number|undefined
     filterId:number
 }
+
+export interface SearchData {
+    searchString: string
+    placeId: number
+}

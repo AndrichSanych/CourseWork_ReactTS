@@ -51,7 +51,7 @@ export interface AdvertFitersProps {
     values?: FilterData[]
     onChange?: Function
     bordered?: boolean
-    row?:boolean
+    child?:boolean
 }
 
 export interface DisabledRowProps {
