@@ -6,3 +6,13 @@ export interface TreeElement{
     selectable: boolean ;
     key:any
 }
+
+export interface FilterData{
+    id:number
+    filterId:number
+}
+
+export interface SearchData {
+    searchString: string
+    placeId: number
+}

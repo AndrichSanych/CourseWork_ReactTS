@@ -10,6 +10,8 @@ import UserAccount from './components/user/user-account';
 import UserAdverts from './components/user/user-adverts';
 import Layout from './components/Layout';
 import CreateAdvert from './components/advert/create-advert';
+import AdvertPage from './components/advert';
+
 
 
 const App: React.FC = () => {
@@ -29,6 +31,8 @@ const App: React.FC = () => {
         <Route path="/useradverts" element={
           <UserProtectedRoute children={<UserAdverts />} />
         } />
+        <Route path='/main-search' element={<HomePage />} />
+        <Route path='/advert' element={<AdvertPage />} />
         <Route path='/registration' element={<Registration />} />
         <Route path='/login' element={<Login />} />
         <Route path="*" element={

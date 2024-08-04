@@ -1,12 +1,9 @@
 .no-border {
-    border: none ;
     font-size: 18px;
     font-weight: 600;
 }
-.no-border:focus {
-     outline: none;
-}
 
+.no-border,
 .search-tree > .ant-select-selector
 {
     border: none !important;
@@ -54,5 +51,3 @@
 .search-button > span{
     font-size:28px;
 }
-
-

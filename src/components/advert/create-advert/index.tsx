@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, GetProp, Input, InputNumber, message, Radio, Switch, TreeSelect, TreeSelectProps, type UploadFile } from 'antd';
+import { Button, Form, Input, InputNumber, message, Radio, Switch, TreeSelect, TreeSelectProps, type UploadFile } from 'antd';
 import ImageUpload from '../../common-components/ImageUpload';
 import { AdvertCreationModel } from '../../../models/AdvertCreationModel';
 import { CategoryModel } from '../../../models/CategoryModel';
@@ -13,11 +13,13 @@ import { CityModel } from '../../../models/CityModel';
 import { advertService } from '../../../services/advertService';
 import { useNavigate } from 'react-router-dom';
 import user from '../../../stores/UserStore'
+import { FilterData, TreeElement } from '../../../models/Models';
+import Filters from '../../filters';
+import { filterTree } from '../../../helpers/common-methods';
 
-import { TreeElement } from '../../../models/Models';
 
 const CreateAdvert: React.FC = () => {
-  
+
   const navigate = useNavigate();
   const [files, setFiles] = useState<UploadFile[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<CategoryModel>();
@@ -26,19 +28,24 @@ const CreateAdvert: React.FC = () => {
   const [isNew, setIsNew] = useState<boolean>(true);
   const [isVip, setIsVip] = useState<boolean>(true);
   const [publishing, setPublishing] = useState<boolean>(false);
+  const [filterValues, setFilterValues] = useState<FilterData[]>([]);
+  const [contractPrice, setContractPrice] = useState<boolean>(false);
+
 
   useEffect(() => {
     (async () => {
       var result = await areaService.getAll();
       if (result.status === 200) {
-        var elements = result.data.map(x => ({ id: x.id, value: x.id, title: x.name, pId: 0, selectable: false ,key:x.id }))
+        var elements = result.data.map(x => ({ id: x.id, value: x.id, title: x.name, pId: 0, selectable: false, key: x.id }))
         setTreeElements(elements);
       }
     })()
   }, []);
 
+
   const onFinish = async (advert: AdvertCreationModel) => {
     setPublishing(true);
+    advert.isContractPrice = contractPrice;
     advert.categoryId = selectedCategory?.id || 0;
     advert.userId = user.id;
     advert.isNew = isNew;
@@ -47,6 +54,8 @@ const CreateAdvert: React.FC = () => {
     Object.keys(advert).forEach(function (key) {
       if (key === 'imageFiles') {
         advert[key]?.forEach((x) => formData.append(key, x?.originFileObj as Blob))
+      } else if (key === 'filterValues') {
+        advert[key]?.forEach((x) => formData.append(key, x.id?.toString() || ''))
       }
       else {
         var value = advert[key as keyof AdvertCreationModel];
@@ -69,7 +78,7 @@ const CreateAdvert: React.FC = () => {
   const getTreeNode = async (parentId: number) => {
     var result = await cityService.getByAreaId(parentId);
     if (result.status === 200) {
-      return (result.data as CityModel[]).map(x => ({ id: x.id, value: x.id, title: x.name, pId: parentId, isLeaf: true,key:x.id }));
+      return (result.data as CityModel[]).map(x => ({ id: x.id, value: x.id, title: x.name, pId: parentId, isLeaf: true, key: x.id }));
     }
     else return []
   };
@@ -131,6 +140,20 @@ const CreateAdvert: React.FC = () => {
             </Form.Item>
           </div>
 
+          {selectedCategory &&
+            <div className='white-container'>
+              <Form.Item
+                name="filterValues"
+                label={<h6>Характеристики</h6>}
+              >
+                <Filters
+                  values={filterValues}
+                  child={false}
+                  bordered={true}
+                  onChange={setFilterValues}
+                  categoryId={selectedCategory.id} />
+              </Form.Item>
+            </div>}
 
           <div className='white-container'>
             <Form.Item
@@ -209,14 +232,10 @@ const CreateAdvert: React.FC = () => {
                   ]}>
                   <InputNumber addonAfter="грн." size='large' />
                 </Form.Item>
-
-                <Form.Item
-                  name='isContractPrice'>
-                  <div style={{ width: 250 }} className='d-flex justify-content-between' >
-                    <h6>Договірна</h6>
-                    <Switch defaultValue={false} />
-                  </div>
-                </Form.Item>
+                <div style={{ width: 250 }} className='d-flex justify-content-between' >
+                  <h6>Договірна</h6>
+                  <Switch defaultValue={false} onChange={setContractPrice}/>
+                </div>
               </>
             }
           </div>
@@ -248,6 +267,7 @@ const CreateAdvert: React.FC = () => {
                     <p>Дані не знайдені</p>
                   </div>
                 }
+                filterTreeNode={filterTree}
               />
             </Form.Item>
           </div>

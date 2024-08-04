@@ -1,12 +1,7 @@
 import React from 'react'
 import {  Image } from 'antd';
-import type { UploadFile } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
-
-interface SortedImageProps {
-    item: UploadFile,
-    deleteHandler: Function
-}
+import { SortedImageProps } from '../../models/Props';
 
 const SortedImage: React.FC<SortedImageProps> = ({ item, deleteHandler }) => {
     return (

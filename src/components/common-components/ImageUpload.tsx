@@ -1,15 +1,11 @@
-import { Badge, UploadFile } from 'antd'
+import { Badge } from 'antd'
 import React from 'react'
 import { FileType, getBase64, reorder } from '../../helpers/common-methods';
 import Dragger from 'antd/es/upload/Dragger';
 import { InboxOutlined } from '@ant-design/icons';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import SortedImage from './SortedImage';
-
-interface ImageLoaderProps {
-  files: UploadFile[]
-  onChange?: Function
-}
+import { ImageLoaderProps } from '../../models/Props';
 
 const ImageUpload: React.FC<ImageLoaderProps> = ({ files, onChange = () => { } }) => {
 
@@ -35,7 +31,6 @@ const ImageUpload: React.FC<ImageLoaderProps> = ({ files, onChange = () => { } }
     if (!result.destination) {
       return;
     }
-
     onChange(reorder(
       files,
       result.source.index,
@@ -100,10 +95,10 @@ const ImageUpload: React.FC<ImageLoaderProps> = ({ files, onChange = () => { } }
                           )}
                         >
                           {index === 0 ?
-                           <Badge.Ribbon text="Основне" color="green">
-                            <SortedImage item={item} deleteHandler={deleteImage} />
-                          </Badge.Ribbon>:
-                          <SortedImage item={item} deleteHandler={deleteImage} />}
+                            <Badge.Ribbon text="Основне" color="green">
+                              <SortedImage item={item} deleteHandler={deleteImage} />
+                            </Badge.Ribbon> :
+                            <SortedImage item={item} deleteHandler={deleteImage} />}
                         </div>
                       )}
                     </Draggable>
@@ -115,7 +110,6 @@ const ImageUpload: React.FC<ImageLoaderProps> = ({ files, onChange = () => { } }
           </DragDropContext>}
       </div>
     </>
-
   )
 }
 

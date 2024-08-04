@@ -35,17 +35,6 @@ const Header: React.FC = observer(() => {
         navigate('/')
     }
 
-
-    const onFavoriteButtonClick = () => {
-
-    }
-
-    const onUserButtonClick = () => {
-        if (!user.isAuthorized) {
-            navigate('/login');
-        }
-    }
-
     const items: MenuItem[] = [
         {
             label: <Link to="account">
@@ -83,13 +72,13 @@ const Header: React.FC = observer(() => {
                             menu={{ items: userMenuItems }}
                             trigger={['click']}
                         >
-                            <div className='user-profile-button d-flex gap-2 align-items-center' onClick={onUserButtonClick}>
+                            <div className='user-profile-button d-flex gap-2 align-items-center' onClick={()=>navigate('/account')}>
                                 <UserOutlined />
                                 <span>Ваш профіль</span>
                                 <DownOutlined />
                             </div>
                         </Dropdown>) ||
-                        <div className='user-profile-button d-flex gap-2 align-items-center' onClick={onUserButtonClick}>
+                        <div className='user-profile-button d-flex gap-2 align-items-center' onClick={()=>navigate('/account')}>
                             <UserOutlined />
                             <span>Ваш профіль</span>
                         </div>}
