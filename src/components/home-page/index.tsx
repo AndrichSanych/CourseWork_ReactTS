@@ -79,7 +79,8 @@ const HomePage: React.FC = () => {
       setSearchParams(getQueryString(filter))
     }
     else {
-      Object.assign(filter, emptyFilter)
+      //Object.assign(filter, emptyFilter)
+      setFilter(emptyFilter)
     }
   }, [filter, location.pathname, setSearchParams])
   
