@@ -3,9 +3,6 @@ import { Avatar } from 'antd';
 import { CategoryViewProps } from '../../../models/Props';
 
 const imagesUrl = (process.env.REACT_APP_SERVER_HOST || '') + process.env.REACT_APP_IMAGES_FOLDER;
-
-
-
 const CategoryView: React.FC<CategoryViewProps> = ({category,onClick}) => {
   return (
     <div onClick={onClick?()=>onClick(category.id):()=>{}}

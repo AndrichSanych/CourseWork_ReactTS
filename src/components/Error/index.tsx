@@ -2,12 +2,7 @@ import { Button, Result } from "antd";
 import { ResultStatusType } from "antd/es/result";
 import React from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-
-interface ErrorProps {
-    status?: string;
-    title?: string;
-    subTitle?: string;
-  }
+import { ErrorProps } from "../../models/Props";
 
 const Error:React.FC<ErrorProps> = ({ status, title, subTitle }) => {
   const [params] = useSearchParams() ;

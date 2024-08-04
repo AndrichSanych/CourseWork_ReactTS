@@ -8,7 +8,7 @@ export interface TreeElement{
 }
 
 export interface FilterData{
-    valueId:number|undefined
+    id:number
     filterId:number
 }
 

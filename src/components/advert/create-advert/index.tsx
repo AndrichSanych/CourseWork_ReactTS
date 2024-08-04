@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import user from '../../../stores/UserStore'
 import { FilterData, TreeElement } from '../../../models/Models';
 import Filters from '../../filters';
+import { filterTree } from '../../../helpers/common-methods';
 
 
 const CreateAdvert: React.FC = () => {
@@ -54,7 +55,7 @@ const CreateAdvert: React.FC = () => {
       if (key === 'imageFiles') {
         advert[key]?.forEach((x) => formData.append(key, x?.originFileObj as Blob))
       } else if (key === 'filterValues') {
-        advert[key]?.forEach((x) => formData.append(key, x.valueId?.toString() || ''))
+        advert[key]?.forEach((x) => formData.append(key, x.id?.toString() || ''))
       }
       else {
         var value = advert[key as keyof AdvertCreationModel];
@@ -152,9 +153,7 @@ const CreateAdvert: React.FC = () => {
                   onChange={setFilterValues}
                   categoryId={selectedCategory.id} />
               </Form.Item>
-            </div>
-
-          }
+            </div>}
 
           <div className='white-container'>
             <Form.Item
@@ -268,13 +267,7 @@ const CreateAdvert: React.FC = () => {
                     <p>Дані не знайдені</p>
                   </div>
                 }
-                filterTreeNode={(search, item) => {
-                  var res = false;
-                  if (item.title) {
-                      res = item.title?.toLocaleString()?.toLocaleLowerCase()?.indexOf(search.toLowerCase()) >= 0;
-                  }
-                  return res;
-              }}
+                filterTreeNode={filterTree}
               />
             </Form.Item>
           </div>

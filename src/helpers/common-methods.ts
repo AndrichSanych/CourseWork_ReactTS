@@ -1,5 +1,5 @@
 import { GetProp, UploadFile, UploadProps } from "antd";
-import { FilterModel } from "../models/FilterModel";
+import { DefaultOptionType } from "antd/es/cascader";
 
 export type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -33,4 +33,12 @@ export const getQueryString = (filter: any): string => {
     }
   });
   return result;
+} 
+
+export const filterTree: boolean | ((inputValue: string, treeNode: DefaultOptionType) => boolean) | undefined = (search:string, item:DefaultOptionType):boolean => {
+  var res = false;
+  if (item.title) {
+      res = item.title?.toLocaleString()?.toLocaleLowerCase()?.indexOf(search.toLowerCase()) >= 0;
+  }
+  return res;
 } 

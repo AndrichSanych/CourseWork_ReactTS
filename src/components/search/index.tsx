@@ -8,12 +8,14 @@ import { CityModel } from '../../models/CityModel'
 import { FilterData, SearchData, TreeElement } from '../../models/Models'
 import { SearchProps } from '../../models/Props'
 import Filters from '../filters'
+import { filterTree } from '../../helpers/common-methods'
 
 
 const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { }, categories }) => {
     const [treeElements, setTreeElements] = useState<TreeElement[]>([]);
     const [loading, setLoading] = useState<boolean>(true)
     const [form] = Form.useForm();
+
     useEffect(() => {
         (async () => {
             var result = await areaService.getAll();
@@ -26,12 +28,12 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
             }
             setLoading(false)
         })()
-    }, []);
+    }, [filter?.areaId, filter?.cityId]);
 
     useEffect(() => {
         form.setFieldValue('searchString', filter?.search)
         form.setFieldValue('placeId', filter?.cityId ? filter?.cityId : (filter?.areaId ? -filter?.areaId : undefined))
-    }, [filter])
+    }, [filter, form])
 
     const getTreeNode = async (parentId: number | undefined) => {
         if (parentId) {
@@ -42,6 +44,7 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
         }
         return []
     };
+
     const onLoadData: TreeSelectProps['loadData'] = async ({ id }) => {
         var temp = [...treeElements, ...(await getTreeNode(id))];
         setTreeElements(temp as TreeElement[]);
@@ -78,9 +81,11 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
     const onStateChange = (state: boolean) => {
         onSearch({ ...filter, isNew: state })
     }
+
     const onVipChange = (state: boolean) => {
         onSearch({ ...filter, isVip: state })
     }
+
     const onContractPriceChange = (state: boolean) => {
         onSearch({ ...filter, isContractPrice: state })
     }
@@ -92,7 +97,6 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
     const onPriceToChange = (value: FocusEvent<HTMLInputElement>) => {
         onSearch({ ...filter, priceTo: value.target.value })
     }
-
 
     const onFiltersChange = (data: FilterData) => {
         onSearch({ ...filter, filterValues: data })
@@ -146,13 +150,7 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                                             <p>Дані не знайдені</p>
                                         </div>
                                     }
-                                    filterTreeNode={(search, item) => {
-                                        var res = false;
-                                        if (item.title) {
-                                            res = item.title?.toLocaleString()?.toLocaleLowerCase()?.indexOf(search.toLowerCase()) >= 0;
-                                        }
-                                        return res;
-                                    }}
+                                    filterTreeNode={filterTree}
                                 />}
                         </Form.Item>
                     </div>
@@ -170,7 +168,7 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                                     md={{ span: 24 }}
                                     lg={{ span: 12 }}
                                     xl={{ span: 8 }}
-                                    xxl={{ span: 5 }}
+                                    xxl={(filter?.categoryId) ? { span: 6 } : { span: 5 }}
                                     key={'categiry'}>
                                     <div className='filter-item-container'>
                                         <span>Kатегорія</span>
@@ -194,7 +192,7 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                                     md={{ span: 24 }}
                                     lg={{ span: 12 }}
                                     xl={{ span: 8 }}
-                                    xxl={{ span: 5 }}
+                                    xxl={(filter?.categoryId) ? { span: 6 } : { span: 5 }}
                                     key={'c-price'}>
                                     <div className='filter-item-container'>
                                         <span>Договірна ціна</span>
@@ -218,7 +216,7 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                                     md={{ span: 24 }}
                                     lg={{ span: 12 }}
                                     xl={{ span: 8 }}
-                                    xxl={{ span: 5 }}
+                                    xxl={(filter?.categoryId) ? { span: 6 } : { span: 5 }}
                                     key={'state'}>
                                     <div className='filter-item-container'>
                                         <span>Стан</span>
@@ -242,7 +240,7 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                                     md={{ span: 24 }}
                                     lg={{ span: 12 }}
                                     xl={{ span: 8 }}
-                                    xxl={{ span: 5 }}
+                                    xxl={(filter?.categoryId) ? { span: 6 } : { span: 5 }}
                                     key={'vip'}>
                                     <div className='filter-item-container'>
                                         <span>VIP оголошення</span>
@@ -266,7 +264,7 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                                     md={{ span: 24 }}
                                     lg={{ span: 12 }}
                                     xl={{ span: 8 }}
-                                    xxl={{ span: 4 }}
+                                    xxl={(filter?.categoryId) ? { span: 6 } : { span: 4 }}
                                     key={'d-price'}>
                                     <div className='filter-item-container'>
                                         <span>Діапазон цін</span>

@@ -19,11 +19,11 @@ const FavoriteButton: React.FC<AdvertModel> = observer((advert: AdvertModel) => 
                 setFavorite(storageService.getLocalFavorites().includes(advert.id))
             }
             else
-               setFavorite(false)
+                setFavorite(false)
         }
-    }, [user.isAuthorized,advert])
+    }, [user.isAuthorized, advert])
 
-    const favoriteClick = async (e:any) => {
+    const favoriteClick = async (e: any) => {
         e.stopPropagation();
         if (user.isAuthorized) {
             const result = await accountService.toggleFavorite(advert.id)

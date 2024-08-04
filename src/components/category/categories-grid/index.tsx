@@ -1,12 +1,7 @@
 import React from 'react'
-import { CategoryModel } from '../../../models/CategoryModel'
 import CategoryView from '../category-view-h'
 import { Col, Row } from 'antd'
-
-interface CategoryGridProps{
-  categories: CategoryModel[]
-  handleClick?:Function
-}
+import { CategoryGridProps } from '../../../models/Props'
 
 const CategoriesGrid: React.FC<CategoryGridProps> = ({categories,handleClick}) => {
   return (

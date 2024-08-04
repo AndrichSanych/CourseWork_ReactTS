@@ -10,5 +10,10 @@ export interface FilterModel {
     areaId?: number
     priceFrom?:number
     priceTo?:number
-    filterValues?:FilterData[]
+    filterValues:FilterData[]
+    count?:number
+    page?:number
 }
+// export interface FilterDataModel extends FilterModel{
+//     filterDataValues?:FilterData[]
+// }

@@ -2,7 +2,6 @@ import { ReactElement } from "react"
 import { AdvertModel } from "./AdvertModel"
 import { CategoryModel } from "./CategoryModel"
 import { FilterModel } from "./FilterModel"
-import { AdvertFilterModel } from "./AdvertFilterModel"
 import { UploadFile } from "antd"
 import { FilterData } from "./Models"
 
@@ -51,10 +50,26 @@ export interface AdvertFitersProps {
     values?: FilterData[]
     onChange?: Function
     bordered?: boolean
-    child?:boolean
+    child?: boolean
 }
 
 export interface DisabledRowProps {
     enabled?: boolean
-    children?:ReactElement[]
+    children?: ReactElement[]
+}
+
+export interface CategoryGridProps {
+    categories: CategoryModel[]
+    handleClick?: Function
+}
+
+export interface SortedImageProps {
+    item: UploadFile,
+    deleteHandler: Function
+}
+
+export interface ErrorProps {
+    status?: string;
+    title?: string;
+    subTitle?: string;
 }

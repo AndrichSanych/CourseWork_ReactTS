@@ -9,10 +9,10 @@ import DivabledRow from '../common-components/DivabledRow'
 
 
 
-const Filters: React.FC<AdvertFitersProps> = ({child, categoryId, values, bordered, onChange = () => { } }) => {
+const Filters: React.FC<AdvertFitersProps> = ({ child, categoryId, values, bordered, onChange = () => { } }) => {
     const [categoryFilters, setCategoryFilters] = useState<AdvertFilterModel[]>([])
     const [filterValues, setFilterValues] = useState<FilterData[]>(values || [])
-    
+
     useEffect(() => {
         (async () => {
             if (categoryId) {
@@ -35,7 +35,7 @@ const Filters: React.FC<AdvertFitersProps> = ({child, categoryId, values, border
                 values.splice(index, 1);
             }
         }
-        if (data.valueId) {
+        if (data.id) {
             values.push(data)
         }
         setFilterValues(values);
@@ -58,18 +58,16 @@ const Filters: React.FC<AdvertFitersProps> = ({child, categoryId, values, border
                         <div className='filter-element-container'>
                             <Select
                                 allowClear
-                                defaultValue={filterValues?.find(x => x.filterId === catFilter.id)?.valueId}
+                                defaultValue={filterValues?.find(x => x.filterId === catFilter.id)?.id}
                                 placeholder={catFilter.name}
                                 className={`w-100  ${bordered ? '' : 'filter-element no-border'} `}
                                 size='large'
                                 options={catFilter.values?.map(x => ({ value: x.id, label: x.value }))}
-                                onChange={(valueId) => onFilterChange({ filterId: catFilter.id, valueId: valueId })} />
-
+                                onChange={(valueId) => onFilterChange({ filterId: catFilter.id, id: valueId })} />
                         </div>
                     </div>
                 </Col>
             )}
-
         </DivabledRow>
     )
 }

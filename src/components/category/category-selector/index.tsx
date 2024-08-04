@@ -14,8 +14,6 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({ category,onChange =
     const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
     const [categories, setCategories] = useState<CategoryModel[]>([]);
 
-
-
     useEffect(() => {
         (async () => {
             var result = await categoryService.getAll();
@@ -57,7 +55,6 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({ category,onChange =
                 <CategoriesGrid categories={categories} handleClick={handleClick} />
             </Modal>
         </>
-
     )
 }
 
