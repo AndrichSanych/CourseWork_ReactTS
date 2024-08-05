@@ -3,6 +3,7 @@ export interface AdvertModel {
     userId: string
     cityId: number
     cityName: string
+    areaName:string
     categoryId: number
     categoryName: string
     date: string

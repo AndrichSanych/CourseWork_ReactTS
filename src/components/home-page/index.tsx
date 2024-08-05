@@ -11,8 +11,9 @@ import StartContent from './start-content';
 import Search from '../search';
 import { FilterData } from '../../models/Models';
 import { advertService } from '../../services/advertService';
-import { Empty, Pagination, PaginationProps, Spin } from 'antd';
+import { PaginationProps} from 'antd';
 import { emptyFilter, paginatorConfig } from '../../helpers/constants';
+import AdvertTable from '../advert/advert-table';
 
 
 const HomePage: React.FC = () => {
@@ -62,7 +63,7 @@ const HomePage: React.FC = () => {
         for (const key in filter) {
           if (key === 'filterValues') {
             (filter[key as keyof FilterModel] as FilterData[])?.forEach((item) => {
-              formData.append(key, item.id.toString());
+              formData.append(key, item.id?.toString());
             });
           }
           else {
@@ -83,7 +84,7 @@ const HomePage: React.FC = () => {
       setFilter(emptyFilter)
     }
   }, [filter, location.pathname, setSearchParams])
-  
+
   useEffect(() => {
     (async () => {
       const [categs] = await axios.all(
@@ -128,24 +129,14 @@ const HomePage: React.FC = () => {
         ? <StartContent
           categories={categories}
           onCategorySelect={categorySelect} />
-        : <>
-          {!loading && adverts.length > 0
-            ? <div className='d-flex flex-column gap-3 w-70 mx-auto'> 
-              {adverts.map(x => <h6 key={x.id}>{x.title}</h6>)}
-              <Pagination
-                align="end"
-                showSizeChanger
-                showQuickJumper
-                pageSizeOptions={paginatorConfig.pagination.pageSizeOptions}
-                locale={paginatorConfig.pagination.locale}
-                showTotal={paginatorConfig.pagination.showTotal}
-                current={filter.page}
-                total={total}
-                pageSize={filter.count}
-                onChange={onPaginationChange} />
-            </div>
-            : <>{loading ? <Spin className='d-block mx-auto' size='large' /> : <Empty />}</>}
-        </>
+        : <AdvertTable
+          loading={loading}
+          adverts={adverts}
+          total={total}
+          page={filter.page}
+          pageCount={filter.count}
+          onChange={onPaginationChange} 
+          title='Знайдені оголошення'/>
       }
     </div>
   )
