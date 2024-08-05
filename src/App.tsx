@@ -19,12 +19,11 @@ const App: React.FC = () => {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
+        <Route path="/favorites" element={<FavoriteAdverts />} />
         <Route path="/create-advert" element={
           <UserProtectedRoute children={<CreateAdvert />} />
         } />
-        <Route path="/favorites" element={
-          <UserProtectedRoute children={<FavoriteAdverts />} />
-        } />
+        
          <Route path="/account" element={
           <UserProtectedRoute children={<UserAccount />} />
         } />

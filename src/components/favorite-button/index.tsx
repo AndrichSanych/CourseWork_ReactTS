@@ -21,13 +21,16 @@ const FavoriteButton: React.FC<AdvertModel> = observer((advert: AdvertModel) => 
             else
                 setFavorite(false)
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user.isAuthorized, advert])
 
     const favoriteClick = async (e: any) => {
         e.stopPropagation();
+        setFavorite(!favorite)
         if (user.isAuthorized) {
             const result = await accountService.toggleFavorite(advert.id)
             if (result.status !== 200) {
+                setFavorite(!favorite)
                 return
             }
         }
@@ -35,7 +38,6 @@ const FavoriteButton: React.FC<AdvertModel> = observer((advert: AdvertModel) => 
             storageService.toggleFavorites(advert.id)
         }
         message.success(favorite ? 'Оголошення видалено з обраних' : 'Оголошення додано до обраних')
-        setFavorite(!favorite)
     }
     return (
         <>
