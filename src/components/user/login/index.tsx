@@ -8,7 +8,7 @@ import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { storageService } from '../../../services/storangeService';
 import user from '../../../stores/UserStore'
 
-export const Login: React.FC =() => {
+export const Login: React.FC = () => {
     const [remember, setRemember] = useState<boolean>(false);
     const navigate = useNavigate()
 
@@ -28,9 +28,12 @@ export const Login: React.FC =() => {
     }
     return (
         <>
+        <div className=' w-70 mx-auto'>
             <BackButton />
-            <div className='w-75 mx-auto'>
-                <Divider className='fs-3  mb-5' orientation="left">Логін</Divider>
+        </div>
+           
+            <div className='w-50 mx-auto'>
+                <Divider className='fs-3 border-dark-subtle mb-5' orientation="left">Логін</Divider>
                 <Form
                     layout='vertical'
                     style={{
@@ -56,7 +59,7 @@ export const Login: React.FC =() => {
                             },
                         ]}
                     >
-                        <Input />
+                        <Input type='large' />
                     </Form.Item>
 
                     <Form.Item
@@ -69,7 +72,7 @@ export const Login: React.FC =() => {
                             },
                         ]}
                     >
-                        <Input.Password />
+                        <Input.Password  type='large' />
                     </Form.Item>
 
                     <Form.Item>

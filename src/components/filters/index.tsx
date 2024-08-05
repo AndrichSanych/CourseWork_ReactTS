@@ -11,7 +11,6 @@ import DivabledRow from '../common-components/DivabledRow'
 
 const Filters: React.FC<AdvertFitersProps> = ({ child, categoryId, values, bordered, onChange = () => { } }) => {
     const [categoryFilters, setCategoryFilters] = useState<AdvertFilterModel[]>([])
-    const [filterValues, setFilterValues] = useState<FilterData[]>(values || [])
 
     useEffect(() => {
         (async () => {
@@ -22,24 +21,22 @@ const Filters: React.FC<AdvertFitersProps> = ({ child, categoryId, values, borde
                 }
             }
         })()
-
     }, [categoryId])
 
     const onFilterChange = (data: FilterData) => {
-        var values = [...filterValues];
-        const element = values.find(x => x.filterId === data.filterId)
+        var tempValues = [...values || []];
+        const element = tempValues.find(x => x.filterId === data.filterId)
         let index = undefined;
         if (element) {
-            index = values.indexOf(element)
+            index = tempValues.indexOf(element)
             if (index >= 0) {
-                values.splice(index, 1);
+                tempValues.splice(index, 1);
             }
         }
         if (data.id) {
-            values.push(data)
+            tempValues.push(data)
         }
-        setFilterValues(values);
-        onChange(values)
+        onChange(tempValues)
     }
 
     return (
@@ -58,12 +55,13 @@ const Filters: React.FC<AdvertFitersProps> = ({ child, categoryId, values, borde
                         <div className='filter-element-container'>
                             <Select
                                 allowClear
-                                defaultValue={filterValues?.find(x => x.filterId === catFilter.id)?.id}
-                                placeholder={catFilter.name}
+                                value={values?.find(x => x.filterId === catFilter.id)?.id}
+                                placeholder="Всі оголошення"
                                 className={`w-100  ${bordered ? '' : 'filter-element no-border'} `}
                                 size='large'
                                 options={catFilter.values?.map(x => ({ value: x.id, label: x.value }))}
                                 onChange={(valueId) => onFilterChange({ filterId: catFilter.id, id: valueId })} />
+
                         </div>
                     </div>
                 </Col>

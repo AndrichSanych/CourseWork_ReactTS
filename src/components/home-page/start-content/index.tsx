@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Col, Row } from 'antd'
 import CategoryViewVertical from '../../category/category-view-v'
-import SmallAdvertView from '../../advert/advert-viewer-small'
+import VipAdvertCard from '../../advert/advert-cards/vip-card'
 import { StartContentProps } from '../../../models/Props'
 import { AdvertModel } from '../../../models/AdvertModel'
 import axios from 'axios'
@@ -49,7 +49,7 @@ const StartContent: React.FC<StartContentProps> = ({ categories, onCategorySelec
               lg={{ span: 8 }}
               xl={{ span: 6 }}
               key={index}>
-              <SmallAdvertView key={x.id} onClick={(advertId: number) => navigate(`/advert?id=${advertId}`)} advert={x} />
+              <VipAdvertCard key={x.id} onClick={(advertId: number) => navigate(`/advert?id=${advertId}`)} advert={x} />
             </Col>
           )}
         </Row>

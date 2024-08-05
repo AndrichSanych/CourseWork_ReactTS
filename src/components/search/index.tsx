@@ -1,5 +1,5 @@
 import { EnvironmentOutlined, SearchOutlined, SmileOutlined } from '@ant-design/icons'
-import { Col, Form, Input, InputNumber, Row, Select, Space, Spin, TreeSelect, TreeSelectProps } from 'antd'
+import { Button, Col, Form, Input, InputNumber, Row, Select, Space, Spin, TreeSelect, TreeSelectProps } from 'antd'
 import React, { FocusEvent, useEffect, useState } from 'react'
 import './Search.css'
 import { areaService } from '../../services/areaService'
@@ -9,6 +9,7 @@ import { FilterData, SearchData, TreeElement } from '../../models/Models'
 import { SearchProps } from '../../models/Props'
 import Filters from '../filters'
 import { filterTree } from '../../helpers/common-methods'
+import { emptyFilter } from '../../helpers/constants'
 
 
 const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { }, categories }) => {
@@ -98,8 +99,16 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
         onSearch({ ...filter, priceTo: value.target.value })
     }
 
-    const onFiltersChange = (data: FilterData) => {
+    const onFiltersChange = (data: FilterData[]) => {
         onSearch({ ...filter, filterValues: data })
+    }
+
+    const clearFilters = () => {
+        const categoryId = filter?.categoryId;
+        onSearch({
+            ...emptyFilter,
+            categoryId: categoryId
+        })
     }
 
     return (
@@ -107,7 +116,7 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
             <Form
                 form={form}
                 onFinish={onFinish}
-                className='mx-auto'
+                className='w-70 mx-auto'
             >
                 <div className='search-container'>
                     <div className='search-item-container w-50'>
@@ -159,149 +168,146 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
             </Form>
             {isFilter &&
                 <div className='mt-5'>
-                    <div className=' w-70 mx-auto my-5'>
+                    <div className='d-flex flex-column w-70 mx-auto my-5'>
                         <h3>Фільтри</h3>
-                        <div>
-                            <Row gutter={[16, 16]}>
-                                <Col
-                                    sm={{ span: 24 }}
-                                    md={{ span: 24 }}
-                                    lg={{ span: 12 }}
-                                    xl={{ span: 8 }}
-                                    xxl={(filter?.categoryId) ? { span: 6 } : { span: 5 }}
-                                    key={'categiry'}>
-                                    <div className='filter-item-container'>
-                                        <span>Kатегорія</span>
-                                        <div className='filter-element-container'>
-                                            {categories?.length === 0
-                                                ? <Spin spinning size='small' className='align-self-center mx-auto' />
-                                                : <Select
-                                                    allowClear
-                                                    defaultValue={filter?.categoryId}
-                                                    placeholder='Категорія'
-                                                    className='w-100 filter-element'
-                                                    size='large'
-                                                    options={categories?.map(x => ({ value: x.id, label: x.name }))}
-                                                    onChange={onCategoryChange} />}
-
-                                        </div>
-                                    </div>
-                                </Col>
-                                <Col
-                                    sm={{ span: 24 }}
-                                    md={{ span: 24 }}
-                                    lg={{ span: 12 }}
-                                    xl={{ span: 8 }}
-                                    xxl={(filter?.categoryId) ? { span: 6 } : { span: 5 }}
-                                    key={'c-price'}>
-                                    <div className='filter-item-container'>
-                                        <span>Договірна ціна</span>
-                                        <div className='filter-element-container'>
-                                            <Select
-                                                defaultValue={filter?.isContractPrice}
-                                                placeholder='Договірна ціна'
+                        <Row gutter={[16, 16]}>
+                            <Col
+                                sm={{ span: 24 }}
+                                md={{ span: 24 }}
+                                lg={{ span: 12 }}
+                                xl={{ span: 8 }}
+                                xxl={(filter?.categoryId) ? { span: 6 } : { span: 5 }}
+                                key={'categiry'}>
+                                <div className='filter-item-container'>
+                                    <span>Kатегорія</span>
+                                    <div className='filter-element-container'>
+                                        {categories?.length === 0
+                                            ? <Spin spinning size='small' className='align-self-center mx-auto' />
+                                            : <Select
+                                                allowClear
+                                                value={filter?.categoryId}
+                                                placeholder='Всі оголошення'
                                                 className='w-100 filter-element'
                                                 size='large'
-                                                allowClear
-                                                options={
-                                                    [{ value: true, label: 'Договірна' },
-                                                    { value: false, label: 'Не договірна' }]
-                                                }
-                                                onChange={onContractPriceChange} />
-                                        </div>
+                                                options={categories?.map(x => ({ value: x.id, label: x.name }))}
+                                                onChange={onCategoryChange} />}
                                     </div>
-                                </Col>
-                                <Col
-                                    sm={{ span: 24 }}
-                                    md={{ span: 24 }}
-                                    lg={{ span: 12 }}
-                                    xl={{ span: 8 }}
-                                    xxl={(filter?.categoryId) ? { span: 6 } : { span: 5 }}
-                                    key={'state'}>
-                                    <div className='filter-item-container'>
-                                        <span>Стан</span>
+                                </div>
+                            </Col>
+                            <Col
+                                sm={{ span: 24 }}
+                                md={{ span: 24 }}
+                                lg={{ span: 12 }}
+                                xl={{ span: 8 }}
+                                xxl={(filter?.categoryId) ? { span: 6 } : { span: 5 }}
+                                key={'c-price'}>
+                                <div className='filter-item-container'>
+                                    <span>Договірна ціна</span>
+                                    <div className='filter-element-container'>
+                                        <Select
+                                            value={filter?.isContractPrice}
+                                            placeholder='Всі оголошення'
+                                            className='w-100 filter-element'
+                                            size='large'
+                                            allowClear
+                                            options={
+                                                [{ value: true, label: 'Договірна' },
+                                                { value: false, label: 'Не договірна' }]
+                                            }
+                                            onChange={onContractPriceChange} />
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col
+                                sm={{ span: 24 }}
+                                md={{ span: 24 }}
+                                lg={{ span: 12 }}
+                                xl={{ span: 8 }}
+                                xxl={(filter?.categoryId) ? { span: 6 } : { span: 5 }}
+                                key={'state'}>
+                                <div className='filter-item-container'>
+                                    <span>Стан</span>
+                                    <div className='filter-element-container'>
+                                        <Select
+                                            value={filter?.isNew}
+                                            placeholder='Всі оголошення'
+                                            className='w-100 filter-element'
+                                            size='large'
+                                            allowClear
+                                            options={
+                                                [{ value: true, label: 'Нове' },
+                                                { value: false, label: 'Вживане' }]
+                                            }
+                                            onChange={onStateChange} />
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col
+                                sm={{ span: 24 }}
+                                md={{ span: 24 }}
+                                lg={{ span: 12 }}
+                                xl={{ span: 8 }}
+                                xxl={(filter?.categoryId) ? { span: 6 } : { span: 5 }}
+                                key={'vip'}>
+                                <div className='filter-item-container'>
+                                    <span>VIP оголошення</span>
+                                    <div className='filter-element-container'>
+                                        <Select
+                                            value={filter?.isVip}
+                                            placeholder='Всі оголошення'
+                                            className='w-100 filter-element'
+                                            size='large'
+                                            allowClear
+                                            options={
+                                                [{ value: true, label: 'Vip' },
+                                                { value: false, label: 'Звичайне' }]
+                                            }
+                                            onChange={onVipChange} />
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col
+                                sm={{ span: 24 }}
+                                md={{ span: 24 }}
+                                lg={{ span: 12 }}
+                                xl={{ span: 8 }}
+                                xxl={(filter?.categoryId) ? { span: 6 } : { span: 4 }}
+                                key={'d-price'}>
+                                <div className='filter-item-container'>
+                                    <span>Діапазон цін</span>
+                                    <Space>
                                         <div className='filter-element-container'>
-                                            <Select
-                                                defaultValue={filter?.isNew}
-                                                placeholder='Стан'
-                                                className='w-100 filter-element'
+                                            <InputNumber
+                                                value={filter?.priceFrom}
+                                                placeholder='Від'
+                                                className='w-100 filter-element no-border'
                                                 size='large'
-                                                allowClear
-                                                options={
-                                                    [{ value: true, label: 'Нове' },
-                                                    { value: false, label: 'Вживане' }]
-                                                }
-                                                onChange={onStateChange} />
+                                                onBlur={onPriceFromChange}
+                                            />
                                         </div>
-                                    </div>
-                                </Col>
-                                <Col
-                                    sm={{ span: 24 }}
-                                    md={{ span: 24 }}
-                                    lg={{ span: 12 }}
-                                    xl={{ span: 8 }}
-                                    xxl={(filter?.categoryId) ? { span: 6 } : { span: 5 }}
-                                    key={'vip'}>
-                                    <div className='filter-item-container'>
-                                        <span>VIP оголошення</span>
                                         <div className='filter-element-container'>
-                                            <Select
-                                                defaultValue={filter?.isVip}
-                                                placeholder='VIP оголошення'
-                                                className='w-100 filter-element'
+                                            <InputNumber
+                                                value={filter?.priceTo}
+                                                placeholder='До'
+                                                className='w-100 filter-element no-border'
                                                 size='large'
-                                                allowClear
-                                                options={
-                                                    [{ value: true, label: 'Vip' },
-                                                    { value: false, label: 'Звичайне' }]
-                                                }
-                                                onChange={onVipChange} />
+                                                onBlur={onPriceToChange}
+                                            />
                                         </div>
-                                    </div>
-                                </Col>
-                                <Col
-                                    sm={{ span: 24 }}
-                                    md={{ span: 24 }}
-                                    lg={{ span: 12 }}
-                                    xl={{ span: 8 }}
-                                    xxl={(filter?.categoryId) ? { span: 6 } : { span: 4 }}
-                                    key={'d-price'}>
-                                    <div className='filter-item-container'>
-                                        <span>Діапазон цін</span>
-                                        <Space>
-                                            <div className='filter-element-container'>
-                                                <InputNumber
-                                                    defaultValue={filter?.priceFrom}
-                                                    placeholder='Від'
-                                                    className='w-100 filter-element no-border'
-                                                    size='large'
-                                                    onBlur={onPriceFromChange}
+                                    </Space>
+                                </div>
+                            </Col>
+                            {filter?.categoryId
+                                && <Filters
+                                    onChange={onFiltersChange}
+                                    values={filter.filterValues}
+                                    bordered={false}
+                                    child={true}
+                                    categoryId={filter.categoryId} />}
+                        </Row>
 
-                                                />
-                                            </div>
-                                            <div className='filter-element-container'>
-                                                <InputNumber
-                                                    defaultValue={filter?.priceTo}
-                                                    placeholder='До'
-                                                    className='w-100 filter-element no-border'
-                                                    size='large'
-                                                    onBlur={onPriceToChange}
-                                                />
-                                            </div>
-                                        </Space>
 
-                                    </div>
-                                </Col>
-                                {filter?.categoryId
-                                    && <Filters
-                                        onChange={onFiltersChange}
-                                        values={filter.filterValues}
-                                        bordered={false}
-                                        child={true}
-                                        categoryId={filter.categoryId} />}
-                            </Row>
-                        </div>
-
+                        <Button onClick={clearFilters} className=' align-self-end mt-3' type='link'>Очистити фільтри</Button>
                     </div>
                 </div>}
         </>

@@ -73,3 +73,13 @@ export interface ErrorProps {
     title?: string;
     subTitle?: string;
 }
+
+export interface AdvertTableProps{
+    title?:string
+    loading?:boolean
+    adverts?:AdvertModel[]
+    page?:number
+    pageCount?:number
+    total?:number
+    onChange?:(page: number, pageSize: number) => void
+}
