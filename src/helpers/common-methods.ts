@@ -1,5 +1,6 @@
 import { GetProp, UploadFile, UploadProps } from "antd";
 import { DefaultOptionType } from "antd/es/cascader";
+import { Axios, AxiosResponse } from "axios";
 
 export type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -42,3 +43,7 @@ export const filterTree: boolean | ((inputValue: string, treeNode: DefaultOption
   }
   return res;
 } 
+
+export const  TryError = <T>(funct:Function):AxiosResponse<T,any>=>{
+  return funct().catch((error:any)=>error)
+}

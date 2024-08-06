@@ -36,7 +36,7 @@ const CreateAdvert: React.FC = () => {
     (async () => {
       var result = await areaService.getAll();
       if (result.status === 200) {
-        var elements = result.data.map(x => ({ id: x.id, value: x.id, title: x.name, pId: 0, selectable: false, key: x.id }))
+        var elements = result.data.map(x => ({ id: -x.id, value: -x.id, title: x.name, pId: 0, selectable: false, key: -x.id }))
         setTreeElements(elements);
       }
     })()
@@ -76,7 +76,7 @@ const CreateAdvert: React.FC = () => {
   }
 
   const getTreeNode = async (parentId: number) => {
-    var result = await cityService.getByAreaId(parentId);
+    var result = await cityService.getByAreaId(-parentId);
     if (result.status === 200) {
       return (result.data as CityModel[]).map(x => ({ id: x.id, value: x.id, title: x.name, pId: parentId, isLeaf: true, key: x.id }));
     }
@@ -86,6 +86,7 @@ const CreateAdvert: React.FC = () => {
 
   const onLoadData: TreeSelectProps['loadData'] = async ({ id }) => {
     var temp = [...treeElements, ...(await getTreeNode(id))];
+    console.log(temp)
     setTreeElements(temp as TreeElement[]);
   }
 
