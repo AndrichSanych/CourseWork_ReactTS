@@ -16,6 +16,7 @@ import user from '../../../stores/UserStore'
 import { FilterData, TreeElement } from '../../../models/Models';
 import Filters from '../../filters';
 import { filterTree } from '../../../helpers/common-methods';
+import '../../search/Search.css'
 
 
 const CreateAdvert: React.FC = () => {
@@ -30,8 +31,7 @@ const CreateAdvert: React.FC = () => {
   const [publishing, setPublishing] = useState<boolean>(false);
   const [filterValues, setFilterValues] = useState<FilterData[]>([]);
   const [contractPrice, setContractPrice] = useState<boolean>(false);
-
-
+  
   useEffect(() => {
     (async () => {
       var result = await areaService.getAll();
@@ -86,7 +86,6 @@ const CreateAdvert: React.FC = () => {
 
   const onLoadData: TreeSelectProps['loadData'] = async ({ id }) => {
     var temp = [...treeElements, ...(await getTreeNode(id))];
-    console.log(temp)
     setTreeElements(temp as TreeElement[]);
   }
 
@@ -98,10 +97,12 @@ const CreateAdvert: React.FC = () => {
           layout='vertical'
           initialValues={{
             remember: true,
+            phoneNumber: user.phoneNumber ,
+            contactEmail:user.email,
+            contactPersone:user.name + ' ' + user.surname
           }}
           onFinish={onFinish}
-          className='w-100'
-        >
+          className='w-100' >
           <div className='white-container'>
             <h4>Опишіть у подробицях</h4>
             <Form.Item
@@ -124,7 +125,7 @@ const CreateAdvert: React.FC = () => {
                 },
               ]}
             >
-              <Input size='large' className='p-2' placeholder="Наприклад,iPhone 11 з гарантією" showCount minLength={16} maxLength={500} />
+              <Input size='large' className='p-2 no-border no-border-container' placeholder="Наприклад,iPhone 11 з гарантією" showCount minLength={16} maxLength={500} />
             </Form.Item>
             <Form.Item
               hasFeedback
@@ -150,7 +151,6 @@ const CreateAdvert: React.FC = () => {
                 <Filters
                   values={filterValues}
                   child={false}
-                  bordered={true}
                   onChange={setFilterValues}
                   categoryId={selectedCategory.id} />
               </Form.Item>
@@ -191,7 +191,7 @@ const CreateAdvert: React.FC = () => {
               <TextArea
                 showCount
                 maxLength={9000}
-                placeholder="disable resize"
+                placeholder="Опис"
                 style={{ height: 300, resize: 'none' }}
               />
             </Form.Item>
@@ -231,11 +231,11 @@ const CreateAdvert: React.FC = () => {
                       message: "Не забудьте заповнити ціну"
                     }
                   ]}>
-                  <InputNumber addonAfter="грн." size='large' />
+                  <InputNumber className='no-border no-border-container' addonAfter="грн." size='large' />
                 </Form.Item>
                 <div style={{ width: 250 }} className='d-flex justify-content-between' >
                   <h6>Договірна</h6>
-                  <Switch defaultValue={false} onChange={setContractPrice}/>
+                  <Switch defaultValue={false} onChange={setContractPrice} />
                 </div>
               </>
             }
@@ -256,12 +256,13 @@ const CreateAdvert: React.FC = () => {
                 treeCheckable={false}
                 size='large'
                 showSearch
-                style={{ width: 250 }}
+                style={{ width: 300 }}
                 dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                 placeholder="Оберіть місцезнаходження"
                 allowClear
                 loadData={onLoadData}
                 treeData={treeElements}
+                className='no-border-container search-tree'
                 notFoundContent={
                   <div style={{ textAlign: 'center' }}>
                     <SmileOutlined style={{ fontSize: 20 }} />
@@ -272,6 +273,71 @@ const CreateAdvert: React.FC = () => {
               />
             </Form.Item>
           </div>
+
+          <div className='white-container'>
+            <h4>Ваші контактні дані</h4>
+            <Form.Item
+              name="contactPersone"
+              label={<h6>Контактна особа</h6>}
+              hasFeedback
+              className='fs-3'
+              style={{ width: 300 }}
+              rules={[
+                {
+                  required: true,
+                  message: "Не забудьте вказати контактну особу"
+                },
+                {
+                  min: 3,
+                  message: "Введіть щонайменше 3 символів"
+                },
+              ]}
+            >
+              <Input size='large'
+               className='p-2 no-border no-border-container' 
+               placeholder="Контактна особа" 
+               showCount minLength={3} 
+               maxLength={56}
+               defaultValue={user.name + ' ' + user.surname}/>
+            </Form.Item>
+
+            <Form.Item
+              name="contactEmail"
+              label={<h6>Email-адреса</h6>}
+              hasFeedback
+              className='fs-3'
+              style={{ width: 300 }}>
+              <Input 
+              size='large' 
+              readOnly
+              className='p-2 no-border no-border-container' 
+              placeholder="Email-адреса" />
+            </Form.Item>
+            <Form.Item
+              name="phoneNumber"
+              label={<h6>Номер телефону</h6>}
+              hasFeedback
+              className='fs-3'
+              style={{ width: 300 }}
+              rules={[
+                {
+                  required: true,
+                  message: "Не забудьте вказати контактний номер телефону"
+                },
+                {
+                  pattern: RegExp('^\\d{3}[-\\s]{1}\\d{3}[-\\s]{1}\\d{2}[-\\s]{0,1}\\d{2}$'),
+                  message: "Невірно введений телефон!(xxx-xxx-xx-xx) (xxx xxx xx xx) (xxx xxx xxxx) (xxx-xxx-xxxx)",
+                },
+              ]}
+            >
+              <Input
+                size='large'
+                className='p-2 no-border no-border-container'
+                placeholder="Номер телефону"/>
+            </Form.Item>
+          </div>
+
+
 
           <div className='d-flex justify-content-end'>
             <Button loading={publishing} size='large' htmlType="submit">

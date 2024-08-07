@@ -49,7 +49,7 @@ export interface AdvertFitersProps {
     categoryId?: number
     values?: FilterData[]
     onChange?: Function
-    bordered?: boolean
+    grayBg?: boolean
     child?: boolean
 }
 

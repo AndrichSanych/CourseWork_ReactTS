@@ -9,13 +9,13 @@ import { advertService } from '../../../services/advertService'
 import { useNavigate } from 'react-router-dom'
 
 const StartContent: React.FC<StartContentProps> = ({ categories, onCategorySelect = () => { } }) => {
-  const [vipAdverts, setVipAdverts] = useState<AdvertModel[]>([]);
+  const [vipAdverts, setVipAdverts] = useState<AdvertModel[]>();
   const navigate = useNavigate();
   useEffect(() => {
     (async () => {
       const [vips] = await axios.all(
         [
-          advertService.getVip(12)
+          advertService.getRandomVip(12)
         ])
       if (vips?.status === 200)
         setVipAdverts(vips.data)

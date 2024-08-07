@@ -181,7 +181,7 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                                 <div className='filter-item-container'>
                                     <span>Kатегорія</span>
                                     <div className='filter-element-container'>
-                                        {categories?.length === 0
+                                        {! categories || categories?.length === 0
                                             ? <Spin spinning size='small' className='align-self-center mx-auto' />
                                             : <Select
                                                 allowClear
@@ -301,8 +301,8 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                                 && <Filters
                                     onChange={onFiltersChange}
                                     values={filter.filterValues}
-                                    bordered={false}
                                     child={true}
+                                    grayBg ={true}
                                     categoryId={filter.categoryId} />}
                         </Row>
 

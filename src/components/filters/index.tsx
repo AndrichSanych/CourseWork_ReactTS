@@ -9,7 +9,7 @@ import DivabledRow from '../common-components/DivabledRow'
 
 
 
-const Filters: React.FC<AdvertFitersProps> = ({ child, categoryId, values, bordered, onChange = () => { } }) => {
+const Filters: React.FC<AdvertFitersProps> = ({ child, categoryId, values, grayBg, onChange = () => { } }) => {
     const [categoryFilters, setCategoryFilters] = useState<AdvertFilterModel[]>([])
 
     useEffect(() => {
@@ -57,7 +57,7 @@ const Filters: React.FC<AdvertFitersProps> = ({ child, categoryId, values, borde
                                 allowClear
                                 value={values?.find(x => x.filterId === catFilter.id)?.id}
                                 placeholder="Всі оголошення"
-                                className={`w-100  ${bordered ? '' : 'filter-element no-border'} `}
+                                className={`w-100 no-border ${ grayBg ? '' : ' no-border-container'} `}
                                 size='large'
                                 options={catFilter.values?.map(x => ({ value: x.id, label: x.value }))}
                                 onChange={(valueId) => onFilterChange({ filterId: catFilter.id, id: valueId })} />

@@ -13,5 +13,7 @@ export interface AdvertCreationModel{
      price:number 
      imageFiles:(UploadFile | undefined)[]
      filterValues:FilterData[]
-    
+     contactEmail:string
+     phoneNumber:string
+     contactPersone:string
 }

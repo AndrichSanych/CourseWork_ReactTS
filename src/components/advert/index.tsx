@@ -11,6 +11,7 @@ import { getQueryString } from '../../helpers/common-methods';
 import { filterService } from '../../services/filterService';
 import { FilterValueModel } from '../../models/FilterValueModel';
 import FavoriteButton from '../favorite-button';
+import { PhoneOutlined } from '@ant-design/icons';
 
 const imagesUrl = (process.env.REACT_APP_SERVER_HOST || '') + process.env.REACT_APP_IMAGES_FOLDER;
 const AdvertPage: React.FC = () => {
@@ -24,6 +25,7 @@ const AdvertPage: React.FC = () => {
   const time = advert?.date.split('T')[1].slice(0, 5)
   const today = date.getDate() === new Date(Date.now()).getDate()
   const [error, setError] = useState<boolean>(false)
+  const [showPhone, setShowPhone] = useState<boolean>(false)
 
   useEffect(() => {
     if (!id) {
@@ -67,6 +69,7 @@ const AdvertPage: React.FC = () => {
                 lg={{ span: 15 }}
                 xl={{ span: 16 }}
                 xxl={{ span: 16 }}
+                key={'col1'}
               >
                 <div className='d-flex flex-column gap-3 '>
                   <div className="p-4 rounded  bg-white">
@@ -113,10 +116,10 @@ const AdvertPage: React.FC = () => {
                 lg={{ span: 9 }}
                 xl={{ span: 8 }}
                 xxl={{ span: 8 }}
+                key={'col2'}
               >
                 <div className='d-flex flex-column gap-3 '>
                   <div className="d-flex flex-column p-4 rounded  bg-white">
-
                     <div className='d-flex text-start justify-content-between'>
                       <div style={{ fontSize: 13 }} className='d-flex gap-2 flex-wrap text-start'>
                         <span >{advert.areaName} обл. {advert.cityName} -</span>
@@ -126,14 +129,16 @@ const AdvertPage: React.FC = () => {
                       </div>
                       <FavoriteButton {...advert} />
                     </div>
-                    <p className='fs-5 my-4 w-90 text-wrap'>{advert.title}</p>
-                    <div style={{ marginBottom: 10 }} className='d-flex flex-column'>
+                    <span className='fs-5 my-4 w-90 text-wrap'>{advert.title}</span>
+                    <div className=' d-flex flex-column'>
                       <span className='fs-4 fw-bold ' style={{ fontSize: 19 }}>{advert.price === 0 ? 'Безкоштовно' : advert.price + ' грн.'} </span>
                       {advert.isContractPrice ? <span style={{ fontSize: 14, color: 'gray', fontWeight: 'lighter' }}>Договірна</span> : ''}
                     </div>
-
+                    <div className='d-flex mt-4 flex-column gap-3'>
+                      <button className='black-button '>Повідомлення</button>
+                      <button onClick={() => { if (!showPhone) setShowPhone(true) }} className='border-button'>{!showPhone ? "Показати телефон" : <span><PhoneOutlined /> {advert.phoneNumber}</span>}</button>
+                    </div>
                   </div>
-
 
                   <div className="p-4 rounded  bg-white w-100">
                     <h3>User</h3>

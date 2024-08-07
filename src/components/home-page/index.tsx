@@ -11,7 +11,7 @@ import StartContent from './start-content';
 import Search from '../search';
 import { FilterData } from '../../models/Models';
 import { advertService } from '../../services/advertService';
-import { PaginationProps} from 'antd';
+import { PaginationProps, Spin } from 'antd';
 import { emptyFilter, paginatorConfig } from '../../helpers/constants';
 import AdvertTable from '../advert/advert-table';
 
@@ -41,7 +41,7 @@ const HomePage: React.FC = () => {
       }
     }
   }
-  const [categories, setCategories] = useState<CategoryModel[]>([]);
+  const [categories, setCategories] = useState<CategoryModel[]>();
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams('');
@@ -126,17 +126,20 @@ const HomePage: React.FC = () => {
     <div className='mt-5'>
       <Search categories={categories} isFilter={location.pathname !== '/'} filter={filter} onSearch={onSearch} />
       {location.pathname === '/'
-        ? <StartContent
-          categories={categories}
-          onCategorySelect={categorySelect} />
+        ? <>
+          <Spin fullscreen size='large' spinning={!categories} />
+          {categories && <StartContent
+            categories={categories}
+            onCategorySelect={categorySelect} />}
+        </>
         : <AdvertTable
           loading={loading}
           adverts={adverts}
           total={total}
           page={filter.page}
           pageCount={filter.count}
-          onChange={onPaginationChange} 
-          title='Знайдені оголошення'/>
+          onChange={onPaginationChange}
+          title='Знайдені оголошення' />
       }
     </div>
   )
