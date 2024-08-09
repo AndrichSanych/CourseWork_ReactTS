@@ -116,8 +116,7 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
             <Form
                 form={form}
                 onFinish={onFinish}
-                className='w-70 mx-auto'
-            >
+                className='w-70 mx-auto'>
                 <div className='search-container'>
                     <div className='search-item-container w-50'>
                         <SearchOutlined className=' fs-3' />
@@ -181,7 +180,7 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                                 <div className='filter-item-container'>
                                     <span>Kатегорія</span>
                                     <div className='filter-element-container'>
-                                        {categories?.length === 0
+                                        {! categories || categories?.length === 0
                                             ? <Spin spinning size='small' className='align-self-center mx-auto' />
                                             : <Select
                                                 allowClear
@@ -301,8 +300,8 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
                                 && <Filters
                                     onChange={onFiltersChange}
                                     values={filter.filterValues}
-                                    bordered={false}
                                     child={true}
+                                    grayBg ={true}
                                     categoryId={filter.categoryId} />}
                         </Row>
 

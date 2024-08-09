@@ -1,7 +1,7 @@
 import { ReactElement } from "react"
 import { AdvertModel } from "./AdvertModel"
 import { CategoryModel } from "./CategoryModel"
-import { FilterModel } from "./FilterModel"
+import { AdvertSearchModel } from "./FilterModel"
 import { UploadFile } from "antd"
 import { FilterData } from "./Models"
 
@@ -12,7 +12,7 @@ export interface ImageLoaderProps {
 }
 
 export interface SearchProps {
-    filter?: FilterModel
+    filter?: AdvertSearchModel
     isFilter?: boolean
     onSearch?: Function
     categories?: CategoryModel[]
@@ -26,6 +26,7 @@ export interface CategoryViewProps {
 export interface AdvertViewProps {
     advert: AdvertModel
     onClick?: Function
+    onFavoriteChange?: Function
 }
 
 export interface StartContentProps {
@@ -34,7 +35,7 @@ export interface StartContentProps {
 }
 
 export interface FilterProps {
-    filter?: FilterModel
+    filter?: AdvertSearchModel
     categories?: CategoryModel[]
     adverts?: AdvertModel[]
     onFilterChange?: Function
@@ -49,7 +50,7 @@ export interface AdvertFitersProps {
     categoryId?: number
     values?: FilterData[]
     onChange?: Function
-    bordered?: boolean
+    grayBg?: boolean
     child?: boolean
 }
 
@@ -79,7 +80,14 @@ export interface AdvertTableProps{
     loading?:boolean
     adverts?:AdvertModel[]
     page?:number
-    pageCount?:number
+    pageSize?:number
     total?:number
-    onChange?:(page: number, pageSize: number) => void
+    onChange?:Function
+    onAdvertChange?:Function
+    sortIndex?:number
+}
+
+export interface FavoriteButtonProps{
+    advert?:AdvertModel,
+    onChange?:Function
 }

@@ -14,6 +14,7 @@ class UserStore {
     get name(): string { return this.user?.name || '' };
     get surname(): string { return this.user?.surname || '' };
     get birthdate(): string { return this.user?.birthdate || '' };
+    get registerDate(): string { return this.user?.registerDate || '' };
     get email(): string { return this.user?.email || '' };
     get phoneNumber(): string { return this.user?.phoneNumber || '' };
     get roles(): string[] { return this.user?.roles || [] };
@@ -33,7 +34,8 @@ class UserStore {
                 roles: data['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
                 birthdate: data['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/dateofbirth'],
                 phoneNumber: data['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/homephone'] || '',
-                avatar: data['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/anonymous'] || ''
+                avatar: data['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/anonymous'] || '',
+                registerDate: data['http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata'] || ''
             }
         }
     };

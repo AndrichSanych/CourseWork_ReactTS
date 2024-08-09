@@ -23,8 +23,7 @@ const App: React.FC = () => {
         <Route path="/create-advert" element={
           <UserProtectedRoute children={<CreateAdvert />} />
         } />
-        
-         <Route path="/account" element={
+        <Route path="/account" element={
           <UserProtectedRoute children={<UserAccount />} />
         } />
         <Route path="/useradverts" element={
@@ -40,12 +39,12 @@ const App: React.FC = () => {
             title="404"
             subTitle="Вибачте, сторінкт на яку ви намагаєтесь перейти не існує."
           />} />
-          <Route path="forbiden" element={
-            <Error
-              status="403"
-              title="403"
-              subTitle="В доступі відмовлено.Ви не маєте дозволу для доступу до цієї сторінки."
-            />} />
+        <Route path="forbiden" element={
+          <Error
+            status="403"
+            title="403"
+            subTitle="В доступі відмовлено.Ви не маєте дозволу для доступу до цієї сторінки."
+          />} />
       </Route>
     </Routes>
   );

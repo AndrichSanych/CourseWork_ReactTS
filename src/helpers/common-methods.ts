@@ -1,5 +1,6 @@
 import { GetProp, UploadFile, UploadProps } from "antd";
 import { DefaultOptionType } from "antd/es/cascader";
+import { AxiosResponse } from "axios";
 
 export type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -35,6 +36,21 @@ export const getQueryString = (filter: any): string => {
   return result;
 } 
 
+export const setQueryParams = (searchParams: URLSearchParams,params:any)=>{
+  Object.keys(params).forEach((key) => {
+    if (params[key] !== undefined
+      && params[key] !== null
+      && params[key] !== ''
+      && params[key]?.length !== 0) {
+        searchParams.set(key,params[key])
+    }
+    else{
+      searchParams.delete(key)
+    }
+  });
+
+}
+
 export const filterTree: boolean | ((inputValue: string, treeNode: DefaultOptionType) => boolean) | undefined = (search:string, item:DefaultOptionType):boolean => {
   var res = false;
   if (item.title) {
@@ -42,3 +58,7 @@ export const filterTree: boolean | ((inputValue: string, treeNode: DefaultOption
   }
   return res;
 } 
+
+export const  TryError = <T>(funct:Function):AxiosResponse<T,any>=>{
+  return funct().catch((error:any)=>error)
+}

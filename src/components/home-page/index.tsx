@@ -5,13 +5,13 @@ import { categoryService } from '../../services/categoryService';
 import { AdvertModel } from '../../models/AdvertModel';
 import axios from 'axios';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { getQueryString } from '../../helpers/common-methods';
-import { FilterModel } from '../../models/FilterModel';
+import { getQueryString, setQueryParams } from '../../helpers/common-methods';
+import { AdvertSearchModel } from '../../models/FilterModel';
 import StartContent from './start-content';
 import Search from '../search';
 import { FilterData } from '../../models/Models';
 import { advertService } from '../../services/advertService';
-import { PaginationProps} from 'antd';
+import { Spin } from 'antd';
 import { emptyFilter, paginatorConfig } from '../../helpers/constants';
 import AdvertTable from '../advert/advert-table';
 
@@ -38,36 +38,36 @@ const HomePage: React.FC = () => {
           : [],
         page: Number(searchParams.get("page")) || paginatorConfig.pagination.defaultCurrent,
         count: Number(searchParams.get("count")) || paginatorConfig.pagination.defaultPageSize,
+        sortIndex: Number(searchParams.get("sortIndex")) || undefined,
       }
     }
   }
-  const [categories, setCategories] = useState<CategoryModel[]>([]);
+  const [categories, setCategories] = useState<CategoryModel[]>();
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams('');
   const [adverts, setAdverts] = useState<AdvertModel[]>([]);
   const [total, setTotal] = useState<number>();
-  const [filter, setFilter] = useState<FilterModel>(setFilterFromQuery())
+  const [filter, setFilter] = useState<AdvertSearchModel>(setFilterFromQuery())
   const [loading, setLoading] = useState<boolean>(false)
 
 
   useEffect(() => {
     if (location.pathname !== '/') {
-      if (!filter.page) {
-        filter.page = paginatorConfig.pagination.defaultCurrent;
-        filter.count = paginatorConfig.pagination.defaultPageSize;
-      }
       (async () => {
         setLoading(true)
         const formData = new FormData();
+        if (!filter.sortIndex) {
+          filter.sortIndex = 0;
+        }
         for (const key in filter) {
           if (key === 'filterValues') {
-            (filter[key as keyof FilterModel] as FilterData[])?.forEach((item) => {
+            (filter[key as keyof AdvertSearchModel] as FilterData[])?.forEach((item) => {
               formData.append(key, item.id?.toString());
             });
           }
           else {
-            formData.append(key, filter[key as keyof FilterModel]?.toString() || '');
+            formData.append(key, filter[key as keyof AdvertSearchModel]?.toString() || '');
           }
         }
         const result = await advertService.getByFilter(formData);
@@ -77,13 +77,9 @@ const HomePage: React.FC = () => {
         }
         setLoading(false)
       })()
-      setSearchParams(getQueryString(filter))
     }
-    else {
-      //Object.assign(filter, emptyFilter)
-      setFilter(emptyFilter)
-    }
-  }, [filter, location.pathname, setSearchParams])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter])
 
   useEffect(() => {
     (async () => {
@@ -97,49 +93,58 @@ const HomePage: React.FC = () => {
 
   }, [])
 
-  const onSearch = (searchFilter: FilterModel) => {
+  useEffect(() => {
     if (location.pathname === '/') {
-      navigate(`/main-search`);
+      setFilter(emptyFilter)
     }
-    setFilter(searchFilter)
+    else{
+      setFilter(setFilterFromQuery())
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location])
+
+  const onSearch = (searchFilter: AdvertSearchModel) => {
+    if (location.pathname === '/') {
+      navigate(`/main-search${getQueryString(searchFilter)}`);
+    }
+    else {
+      setSearchParams(getQueryString(searchFilter))
+    }
   }
 
   const categorySelect = (id: number) => {
     if (location.pathname === '/') {
-      navigate(`/main-search`);
+      navigate(`/main-search?categoryId=${id}&count=${paginatorConfig.pagination.defaultPageSize}&page=${paginatorConfig.pagination.defaultCurrent}`);
     }
-    setFilter({
-      ...filter,
-      categoryId: id
-    })
   }
 
-  const onPaginationChange: PaginationProps['onShowSizeChange'] = (current: number, pageSize: number) => {
-    setFilter({
-      ...filter,
-      count: pageSize,
-      page: current
-    })
+  const onPaginationChange = (current: number, pageSize: number, sortIndex: number) => {
+    setQueryParams(searchParams, { sortIndex: sortIndex, count: pageSize, page: current })
+    setSearchParams(searchParams)
   };
 
   return (
-    <div className='mt-5'>
+    <div className='my-5'>
       <Search categories={categories} isFilter={location.pathname !== '/'} filter={filter} onSearch={onSearch} />
       {location.pathname === '/'
-        ? <StartContent
-          categories={categories}
-          onCategorySelect={categorySelect} />
+        ? <>
+          <Spin fullscreen size='large' spinning={!categories} />
+          {categories && <StartContent
+            categories={categories}
+            onCategorySelect={categorySelect} />}
+        </>
         : <AdvertTable
           loading={loading}
           adverts={adverts}
           total={total}
           page={filter.page}
-          pageCount={filter.count}
-          onChange={onPaginationChange} 
-          title='Знайдені оголошення'/>
+          pageSize={filter.count}
+          onChange={onPaginationChange}
+          title='Знайдені оголошення' />
       }
     </div>
   )
 }
 
 export default HomePage
+

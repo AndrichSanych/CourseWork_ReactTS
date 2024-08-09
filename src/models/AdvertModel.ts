@@ -1,9 +1,9 @@
 export interface AdvertModel {
-    id:number
+    id: number
     userId: string
     cityId: number
     cityName: string
-    areaName:string
+    areaName: string
     categoryId: number
     categoryName: string
     date: string
@@ -13,6 +13,9 @@ export interface AdvertModel {
     isVip: boolean
     isContractPrice: boolean
     price: number
-    firstImage:string
-    userFavorites:string[]
+    firstImage: string
+    isFavorite: boolean
+    contactEmail: string
+    phoneNumber: string
+    contactPersone: string
 }

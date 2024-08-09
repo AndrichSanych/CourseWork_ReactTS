@@ -1,6 +1,12 @@
 import { FilterData } from "./Models"
 
-export interface FilterModel {
+export interface SearchBaseModel{
+    count?:number
+    page?:number
+    sortIndex?:number
+}
+
+export interface AdvertSearchModel extends SearchBaseModel {
     categoryId?: number
     isNew?: boolean
     isVip?: boolean
@@ -13,7 +19,9 @@ export interface FilterModel {
     filterValues:FilterData[]
     count?:number
     page?:number
+    sortIndex?:number
 }
-// export interface FilterDataModel extends FilterModel{
-//     filterDataValues?:FilterData[]
-// }
+
+
+
+
