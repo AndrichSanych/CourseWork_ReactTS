@@ -20,12 +20,9 @@ const FavoriteAdverts: React.FC = () => {
 
   useEffect(() => {
     loadData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [advertTableData])
-
-  useEffect(() => {
-    loadData()
-  }, [])
-
+  
   const loadData = async () => {
     if (user.isAuthorized) {
       const formData = new FormData();

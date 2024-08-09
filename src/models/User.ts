@@ -2,6 +2,7 @@ export interface IUser{
     name:string
     surname:string
     birthdate:string
+    registerDate:string
     email:string
     phoneNumber:string
     id:string

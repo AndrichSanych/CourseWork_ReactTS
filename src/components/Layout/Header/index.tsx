@@ -65,14 +65,13 @@ const Header: React.FC = observer(() => {
         <header>
             <div className='w-70 h-100 mx-auto d-flex  justify-content-between align-items-center'>
                 <img onClick={()=>navigate('/')} style={{ height: 45, width: 80, cursor:'pointer' }} src={logo} alt='logo' />
-                <div className=' d-flex gap-lg-5'>
+                <div className=' d-flex gap-5'>
                     <HeartOutlined className='favourite-button' onClick={() => navigate('/favorites')} />
                     {(user.isAuthorized &&
                         <Dropdown
                             menu={{ items: userMenuItems }}
-                            trigger={['click']}
-                        >
-                            <div className='user-profile-button d-flex gap-2 align-items-center' onClick={()=>navigate('/account')}>
+                            trigger={['click']}>
+                            <div className='user-profile-button d-flex gap-2 align-items-center'>
                                 <UserOutlined />
                                 <span>Ваш профіль</span>
                                 <DownOutlined />

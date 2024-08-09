@@ -71,17 +71,18 @@ const AdvertTable: React.FC<AdvertTableProps> = ({ loading, adverts = [], page, 
                     <h3>{getTitle()}</h3>
                     {tableStyle
                         ? <Row gutter={[10, 10]}>
-                            {adverts.map((advert, index) =>
+                            {adverts.map((x) =>
                                 <Col
                                     sm={{ span: 24 }}
                                     md={{ span: 24 }}
                                     lg={{ span: 12 }}
                                     xl={{ span: 8 }}
                                     xxl={{ span: 6 }}
-                                    key={advert.id}>
+                                    key={x.id}>
                                     <AdvertCard
+                                        key={x.id}
                                         onFavoriteChange={onAdvertChange}
-                                        advert={advert}
+                                        advert={x}
                                         onClick={(id: number) => navigate(`/advert?id=${id}`)} />
                                 </Col>)}
 
@@ -89,6 +90,7 @@ const AdvertTable: React.FC<AdvertTableProps> = ({ loading, adverts = [], page, 
                         : <div className='d-flex flex-column gap-2'>
                             {adverts.map(x =>
                                 <HorisontalAdvertCard
+                                    key={x.id}
                                     onFavoriteChange={onAdvertChange}
                                     advert={x}
                                     onClick={(id: number) => navigate(`/advert?id=${id}`)} />)}

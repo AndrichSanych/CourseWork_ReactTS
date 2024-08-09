@@ -116,8 +116,7 @@ const Search: React.FC<SearchProps> = ({ filter, isFilter, onSearch = () => { },
             <Form
                 form={form}
                 onFinish={onFinish}
-                className='w-70 mx-auto'
-            >
+                className='w-70 mx-auto'>
                 <div className='search-container'>
                     <div className='search-item-container w-50'>
                         <SearchOutlined className=' fs-3' />

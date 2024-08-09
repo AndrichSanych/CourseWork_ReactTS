@@ -5,7 +5,7 @@ import { categoryService } from '../../services/categoryService';
 import { AdvertModel } from '../../models/AdvertModel';
 import axios from 'axios';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { getQueryString } from '../../helpers/common-methods';
+import { getQueryString, setQueryParams } from '../../helpers/common-methods';
 import { AdvertSearchModel } from '../../models/FilterModel';
 import StartContent from './start-content';
 import Search from '../search';
@@ -38,7 +38,7 @@ const HomePage: React.FC = () => {
           : [],
         page: Number(searchParams.get("page")) || paginatorConfig.pagination.defaultCurrent,
         count: Number(searchParams.get("count")) || paginatorConfig.pagination.defaultPageSize,
-        sortIndex:Number(searchParams.get("sortIndex")) || undefined,
+        sortIndex: Number(searchParams.get("sortIndex")) || undefined,
       }
     }
   }
@@ -54,14 +54,10 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     if (location.pathname !== '/') {
-      if (!filter.page) {
-        filter.page = paginatorConfig.pagination.defaultCurrent;
-        filter.count = paginatorConfig.pagination.defaultPageSize;
-      }
       (async () => {
         setLoading(true)
         const formData = new FormData();
-        if(!filter.sortIndex){
+        if (!filter.sortIndex) {
           filter.sortIndex = 0;
         }
         for (const key in filter) {
@@ -81,13 +77,9 @@ const HomePage: React.FC = () => {
         }
         setLoading(false)
       })()
-      setSearchParams(getQueryString(filter))
     }
-    else {
-      //Object.assign(filter, emptyFilter)
-      setFilter(emptyFilter)
-    }
-  }, [filter, location.pathname, setSearchParams])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter])
 
   useEffect(() => {
     (async () => {
@@ -101,30 +93,34 @@ const HomePage: React.FC = () => {
 
   }, [])
 
+  useEffect(() => {
+    if (location.pathname === '/') {
+      setFilter(emptyFilter)
+    }
+    else{
+      setFilter(setFilterFromQuery())
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location])
+
   const onSearch = (searchFilter: AdvertSearchModel) => {
     if (location.pathname === '/') {
-      navigate(`/main-search`);
+      navigate(`/main-search${getQueryString(searchFilter)}`);
     }
-    setFilter(searchFilter)
+    else {
+      setSearchParams(getQueryString(searchFilter))
+    }
   }
 
   const categorySelect = (id: number) => {
     if (location.pathname === '/') {
-      navigate(`/main-search`);
+      navigate(`/main-search?categoryId=${id}&count=${paginatorConfig.pagination.defaultPageSize}&page=${paginatorConfig.pagination.defaultCurrent}`);
     }
-    setFilter({
-      ...filter,
-      categoryId: id
-    })
   }
 
-  const onPaginationChange = (current: number, pageSize: number,sortIndex:number) => {
-    setFilter({
-      ...filter,
-      count: pageSize,
-      page: current,
-      sortIndex:sortIndex
-    })
+  const onPaginationChange = (current: number, pageSize: number, sortIndex: number) => {
+    setQueryParams(searchParams, { sortIndex: sortIndex, count: pageSize, page: current })
+    setSearchParams(searchParams)
   };
 
   return (
@@ -151,3 +147,4 @@ const HomePage: React.FC = () => {
 }
 
 export default HomePage
+

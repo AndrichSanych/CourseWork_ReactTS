@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import Error from '../Error'
 import { AdvertModel } from '../../models/AdvertModel';
 import { advertService } from '../../services/advertService';
-import { Carousel, Col, Image, Row, Spin, Tag } from 'antd';
+import { Avatar, Carousel, Col, Image, Row, Spin, Tag } from 'antd';
 import { ImageModel } from '../../models/ImageModel';
 import Search from '../search';
 import { AdvertSearchModel } from '../../models/FilterModel';
@@ -11,7 +11,9 @@ import { getQueryString } from '../../helpers/common-methods';
 import { filterService } from '../../services/filterService';
 import { FilterValueModel } from '../../models/FilterValueModel';
 import FavoriteButton from '../favorite-button';
-import { PhoneOutlined } from '@ant-design/icons';
+import { EnvironmentOutlined, PhoneOutlined } from '@ant-design/icons';
+import { IUser } from '../../models/User';
+import { accountService } from '../../services/accountService';
 
 const imagesUrl = (process.env.REACT_APP_SERVER_HOST || '') + process.env.REACT_APP_IMAGES_FOLDER;
 const AdvertPage: React.FC = () => {
@@ -26,6 +28,7 @@ const AdvertPage: React.FC = () => {
   const today = date.getDate() === new Date(Date.now()).getDate()
   const [error, setError] = useState<boolean>(false)
   const [showPhone, setShowPhone] = useState<boolean>(false)
+  const [user, setUser] = useState<IUser>();
 
   useEffect(() => {
     if (!id) {
@@ -47,7 +50,11 @@ const AdvertPage: React.FC = () => {
       }
       setAdvert(advert.data);
       setImages(images.data.sort((a, b) => a.priority - b.priority));
-      setAdvertFilterValues(filters.data)
+      setAdvertFilterValues(filters.data);
+      const result = await accountService.getUser(advert.data.userId);
+      if (result.status === 200) {
+        setUser(result.data)
+      }
     })()
   }, [id])
 
@@ -56,7 +63,7 @@ const AdvertPage: React.FC = () => {
   }
 
   return (
-    <>
+    <div className='my-5'>
       <Search isFilter={false} onSearch={onSearch} />
       <Spin fullscreen size='large' spinning={(!advert && !error)} />
       {advert
@@ -78,8 +85,9 @@ const AdvertPage: React.FC = () => {
                       infinite={true}
                       draggable={false} >
                       {images.map(x =>
-                        <div key={x.id} className='text-center' >
+                        <div className='text-center' >
                           <Image
+                            key={x.id}
                             height={600}
                             src={imagesUrl + "/1200_" + x.name}
                             alt={x.name}
@@ -141,7 +149,24 @@ const AdvertPage: React.FC = () => {
                   </div>
 
                   <div className="p-4 rounded  bg-white w-100">
-                    <h3>User</h3>
+                    <h5 className='mb-4'>Користувач</h5>
+                    <div className='d-flex gap-3 align-content-center align-items-center'>
+                      <Avatar size={60} src={imagesUrl + '/400_' + user?.avatar} />
+                      <div className='d-flex flex-column'>
+                        <span style={{ fontSize: 22 }}>{advert.contactPersone}</span>
+                        <span style={{ fontSize: 16 }}>На Olx з {user?.registerDate.slice(0, 10)}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-4 rounded  bg-white w-100">
+                    <h5 className='mb-4'>Місцезнаходження</h5>
+                    <div className='d-flex gap-3 align-content-center align-items-baseline'>
+                      <EnvironmentOutlined className='fs-3' />
+                      <div className='d-flex flex-column'>
+                        <span style={{ fontSize: 22 }}>{advert.cityName}</span>
+                        <span style={{ fontSize: 16 }}>{advert.areaName} обл.</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </Col>
@@ -154,7 +179,7 @@ const AdvertPage: React.FC = () => {
         subTitle="Помилка звантаження інформації"
       />
       }
-    </>
+    </div>
 
   )
 }
