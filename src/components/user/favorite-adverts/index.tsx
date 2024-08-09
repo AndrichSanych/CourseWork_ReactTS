@@ -12,7 +12,7 @@ import { advertService } from '../../../services/advertService'
 const FavoriteAdverts: React.FC = () => {
   const [advertTableData, setAdvertTableData] = useState<TableData>(({
     page: 1,
-    pageSize: 5,
+    count: 5,
     sortIndex: undefined
   }));
   const [total, setTotal] = useState<number>(0)
@@ -40,8 +40,8 @@ const FavoriteAdverts: React.FC = () => {
       setTotal(storageService.getLocalFavorites().length)
       const tempFavs = sort(storageService.getLocalFavorites(), advertTableData.sortIndex) || [];
       if (tempFavs?.length > 0) {
-        const start = (advertTableData.page - 1) * advertTableData.pageSize;
-        const end = start + advertTableData.pageSize
+        const start = (advertTableData.page - 1) * advertTableData.count;
+        const end = start + advertTableData.count
         const result = await advertService.getByIDs(tempFavs.map(x => x.id).slice(start, end));
         if (result.status === 200 && result.data.length > 0) {
           setAdverts(sort(result.data, advertTableData.sortIndex) as AdvertModel[])
@@ -70,7 +70,7 @@ const FavoriteAdverts: React.FC = () => {
   }
 
   const onChange = (page: number, pageSize: number, sortIndex: number) => {
-    setAdvertTableData(prev => ({ ...prev, page: page, pageSize: pageSize, sortIndex: sortIndex }))
+    setAdvertTableData(prev => ({ ...prev, page: page, count: pageSize, sortIndex: sortIndex }))
   }
 
   const onFavoriteChange = (id:number) => {
@@ -90,7 +90,7 @@ const FavoriteAdverts: React.FC = () => {
         <AdvertTable
           title='Вибрані оголошення'
           page={advertTableData?.page}
-          pageSize={advertTableData?.pageSize}
+          pageSize={advertTableData?.count}
           total={total}
           adverts={adverts}
           onChange={onChange}

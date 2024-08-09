@@ -19,7 +19,7 @@ export interface SearchData {
 
 export interface TableData {
     page: number
-    pageSize: number
+    count: number
     sortIndex: number | undefined
 }
 

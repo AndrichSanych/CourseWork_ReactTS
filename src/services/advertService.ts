@@ -13,6 +13,7 @@ export const advertService = {
     getByUserEmail: (email: string) => TryError<AdvertModel>( ()=> axios.get<AdvertModel>(advertAPIUrl + `/get?email=${email}`)),
     getByFilter: (filter: FormData) => TryError<SearchResultModel>( ()=> axios.post<SearchResultModel>(advertAPIUrl + `/findadverts`,filter,formPostConfig)),
     getFavByFilter: (filter: FormData) => TryError<SearchResultModel>( ()=> axios.post<SearchResultModel>(advertAPIUrl + `/favadverts`,filter,formPostConfig)),
+    getUserAdverts: (filter: FormData) => TryError<SearchResultModel>( ()=> axios.post<SearchResultModel>(advertAPIUrl + `/useradverts`,filter,formPostConfig)),
     getByIDs: (ids: number[]) => TryError<AdvertModel[]>( ()=> axios.post<AdvertModel[]>(advertAPIUrl + `/adverts`,ids)),
     getRandomVip: (count: number)=> TryError<AdvertModel[]>( () => axios.get<AdvertModel[]>(advertAPIUrl + `/vip/${count}`)),
     create: (model: FormData) => TryError( ()=> axios.post(advertAPIUrl + `/create`,model,formPostConfig)),
