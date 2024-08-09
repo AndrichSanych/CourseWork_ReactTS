@@ -4,7 +4,7 @@ import { Card } from 'react-bootstrap';
 import FavoriteButton from '../../../favorite-button';
 import { Tag } from 'antd';
 const imagesUrl = (process.env.REACT_APP_SERVER_HOST || '') + process.env.REACT_APP_IMAGES_FOLDER;
-const AdvertCard: React.FC<AdvertViewProps> = ({ advert, onClick = () => { } }) => {
+const AdvertCard: React.FC<AdvertViewProps> = ({ advert, onClick = () => { } ,onFavoriteChange=()=>{}}) => {
     const date = new Date(advert.date.split('T')[0]);
     const time = advert.date.split('T')[1].slice(0, 5)
     const today = date.getDate() === new Date(Date.now()).getDate()
@@ -35,7 +35,7 @@ const AdvertCard: React.FC<AdvertViewProps> = ({ advert, onClick = () => { } }) 
                             <span style={{ fontSize: 19 }}>{advert.price === 0 ? 'Безкоштовно' : advert.price + ' грн.'} </span>
                             {advert.isContractPrice ? <span style={{ fontSize: 14, color: 'gray', fontWeight: 'lighter' }}>Договірна</span> : ''}
                         </div>
-                        <FavoriteButton {...advert} />
+                        <FavoriteButton advert={advert} onChange={onFavoriteChange}/>
                     </div>
                 </div>
             </Card.Body>

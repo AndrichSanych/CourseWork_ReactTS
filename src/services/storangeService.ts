@@ -1,3 +1,4 @@
+import { LocalFavoriteModel } from "../models/Models";
 
 const accessKey = process.env.REACT_APP_ACCESS_KEY || '';
 const favouritesKey = process.env.REACT_APP_FAVORITES_KEY || '';
@@ -26,24 +27,25 @@ export const storageService = {
 
     isLocalFavorites: (): boolean => localStorage.getItem(favouritesKey) ? true : false,
 
-    getLocalFavorites: (): number[] => {
+    getLocalFavorites: (): LocalFavoriteModel[] => {
         const fav = localStorage.getItem(favouritesKey);
         return fav ? JSON.parse(fav) : []
     },
 
-    setLocalFavorites: (ids: number[]) => localStorage.setItem(favouritesKey, JSON.stringify(ids)),
+    setLocalFavorites: (favorites: LocalFavoriteModel[]) => localStorage.setItem(favouritesKey, JSON.stringify(favorites)),
 
-    toggleFavorites: (id: number) => {
-        let ids: number[] = [];
+    toggleFavorites: ( favorite:  LocalFavoriteModel) => {
+        let favs: LocalFavoriteModel[] = [];
         if (storageService.isLocalFavorites()) {
-            ids = storageService.getLocalFavorites();
-            if(ids.includes(id)){
-                storageService.setLocalFavorites(ids.filter(x => x !== id));
+            favs = storageService.getLocalFavorites();
+            if(favs.find(x=>x.id ===  favorite.id)){
+                storageService.setLocalFavorites(favs.filter(x => x.id !==  favorite.id));
                 return
             }
         }
-        ids.push(id)
-        storageService.setLocalFavorites(ids);
+        favs.push( favorite)
+        storageService.setLocalFavorites(favs);
+        //localStorage.removeItem(favouritesKey)
     },
 
     // removeFromLocalFavorites: (id: number) => {

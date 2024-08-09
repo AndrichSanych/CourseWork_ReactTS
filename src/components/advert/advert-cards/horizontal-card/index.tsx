@@ -3,7 +3,7 @@ import { AdvertViewProps } from '../../../../models/Props'
 import { Tag } from 'antd';
 import FavoriteButton from '../../../favorite-button';
 const imagesUrl = (process.env.REACT_APP_SERVER_HOST || '') + process.env.REACT_APP_IMAGES_FOLDER;
-const HorisontalAdvertCard: React.FC<AdvertViewProps> = ({ advert, onClick = () => { } }) => {
+const HorisontalAdvertCard: React.FC<AdvertViewProps> = ({ advert, onClick = () => { },onFavoriteChange=()=>{} }) => {
     const date = new Date(advert.date.split('T')[0]);
     const time = advert.date.split('T')[1].slice(0, 5)
     const today = date.getDate() === new Date(Date.now()).getDate()
@@ -43,7 +43,7 @@ const HorisontalAdvertCard: React.FC<AdvertViewProps> = ({ advert, onClick = () 
                             ? <span>Сьогодні о {time}</span>
                             : <span>{date.toLocaleDateString('ua-UA')}</span>}
                     </div>
-                    <FavoriteButton {...advert} />
+                    <FavoriteButton advert={advert} onChange={onFavoriteChange} />
                 </div>
             </div>
         </div>

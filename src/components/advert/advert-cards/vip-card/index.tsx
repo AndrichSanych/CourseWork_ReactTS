@@ -18,7 +18,7 @@ const VipAdvertCard: React.FC<AdvertViewProps> = ({ advert, onClick = () => { } 
                     <div className='d-flex flex-column text-start'>
                         <div className='d-flex justify-content-between text-start '>
                             <h6 className=' fw-light text-wrap'>{advert.title}</h6>
-                            <FavoriteButton {...advert} />
+                            <FavoriteButton advert={advert} />
                         </div>
                         <div style={{marginBottom:10}} className='d-flex gap-0 flex-column'>
                             <span style={{fontSize:19}}>{advert.price === 0 ? 'Безкоштовно' : advert.price + ' грн.'} </span>

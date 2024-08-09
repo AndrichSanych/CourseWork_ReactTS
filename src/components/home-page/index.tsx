@@ -6,12 +6,12 @@ import { AdvertModel } from '../../models/AdvertModel';
 import axios from 'axios';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { getQueryString } from '../../helpers/common-methods';
-import { FilterModel } from '../../models/FilterModel';
+import { AdvertSearchModel } from '../../models/FilterModel';
 import StartContent from './start-content';
 import Search from '../search';
 import { FilterData } from '../../models/Models';
 import { advertService } from '../../services/advertService';
-import { PaginationProps, Spin } from 'antd';
+import { Spin } from 'antd';
 import { emptyFilter, paginatorConfig } from '../../helpers/constants';
 import AdvertTable from '../advert/advert-table';
 
@@ -38,6 +38,7 @@ const HomePage: React.FC = () => {
           : [],
         page: Number(searchParams.get("page")) || paginatorConfig.pagination.defaultCurrent,
         count: Number(searchParams.get("count")) || paginatorConfig.pagination.defaultPageSize,
+        sortIndex:Number(searchParams.get("sortIndex")) || undefined,
       }
     }
   }
@@ -47,7 +48,7 @@ const HomePage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams('');
   const [adverts, setAdverts] = useState<AdvertModel[]>([]);
   const [total, setTotal] = useState<number>();
-  const [filter, setFilter] = useState<FilterModel>(setFilterFromQuery())
+  const [filter, setFilter] = useState<AdvertSearchModel>(setFilterFromQuery())
   const [loading, setLoading] = useState<boolean>(false)
 
 
@@ -60,14 +61,17 @@ const HomePage: React.FC = () => {
       (async () => {
         setLoading(true)
         const formData = new FormData();
+        if(!filter.sortIndex){
+          filter.sortIndex = 0;
+        }
         for (const key in filter) {
           if (key === 'filterValues') {
-            (filter[key as keyof FilterModel] as FilterData[])?.forEach((item) => {
+            (filter[key as keyof AdvertSearchModel] as FilterData[])?.forEach((item) => {
               formData.append(key, item.id?.toString());
             });
           }
           else {
-            formData.append(key, filter[key as keyof FilterModel]?.toString() || '');
+            formData.append(key, filter[key as keyof AdvertSearchModel]?.toString() || '');
           }
         }
         const result = await advertService.getByFilter(formData);
@@ -97,7 +101,7 @@ const HomePage: React.FC = () => {
 
   }, [])
 
-  const onSearch = (searchFilter: FilterModel) => {
+  const onSearch = (searchFilter: AdvertSearchModel) => {
     if (location.pathname === '/') {
       navigate(`/main-search`);
     }
@@ -114,16 +118,17 @@ const HomePage: React.FC = () => {
     })
   }
 
-  const onPaginationChange: PaginationProps['onShowSizeChange'] = (current: number, pageSize: number) => {
+  const onPaginationChange = (current: number, pageSize: number,sortIndex:number) => {
     setFilter({
       ...filter,
       count: pageSize,
-      page: current
+      page: current,
+      sortIndex:sortIndex
     })
   };
 
   return (
-    <div className='mt-5'>
+    <div className='my-5'>
       <Search categories={categories} isFilter={location.pathname !== '/'} filter={filter} onSearch={onSearch} />
       {location.pathname === '/'
         ? <>
@@ -137,7 +142,7 @@ const HomePage: React.FC = () => {
           adverts={adverts}
           total={total}
           page={filter.page}
-          pageCount={filter.count}
+          pageSize={filter.count}
           onChange={onPaginationChange}
           title='Знайдені оголошення' />
       }

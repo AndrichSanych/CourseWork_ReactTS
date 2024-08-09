@@ -14,7 +14,7 @@ export interface AdvertModel {
     isContractPrice: boolean
     price: number
     firstImage: string
-    userFavorites: string[]
+    isFavorite: boolean
     contactEmail: string
     phoneNumber: string
     contactPersone: string

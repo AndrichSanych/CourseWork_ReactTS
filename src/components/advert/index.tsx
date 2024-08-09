@@ -6,7 +6,7 @@ import { advertService } from '../../services/advertService';
 import { Carousel, Col, Image, Row, Spin, Tag } from 'antd';
 import { ImageModel } from '../../models/ImageModel';
 import Search from '../search';
-import { FilterModel } from '../../models/FilterModel';
+import { AdvertSearchModel } from '../../models/FilterModel';
 import { getQueryString } from '../../helpers/common-methods';
 import { filterService } from '../../services/filterService';
 import { FilterValueModel } from '../../models/FilterValueModel';
@@ -51,7 +51,7 @@ const AdvertPage: React.FC = () => {
     })()
   }, [id])
 
-  const onSearch = (searchFilter: FilterModel) => {
+  const onSearch = (searchFilter: AdvertSearchModel) => {
     navigate(`/main-search` + getQueryString(searchFilter))
   }
 
@@ -127,7 +127,7 @@ const AdvertPage: React.FC = () => {
                           ? <span>Сьогодні о {time}</span>
                           : <span>{date.toLocaleDateString('ua-UA')}</span>}
                       </div>
-                      <FavoriteButton {...advert} />
+                      <FavoriteButton advert={advert} />
                     </div>
                     <span className='fs-5 my-4 w-90 text-wrap'>{advert.title}</span>
                     <div className=' d-flex flex-column'>
