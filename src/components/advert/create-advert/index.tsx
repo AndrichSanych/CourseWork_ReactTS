@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, InputNumber, message, Radio, Spin, Switch, TreeSelect, TreeSelectProps, type UploadFile } from 'antd';
 import ImageUpload from '../../common-components/ImageUpload';
 import { AdvertCreationModel } from '../../../models/AdvertCreationModel';
-import { CategoryModel } from '../../../models/CategoryModel';
 import CategorySelector from '../../category/category-selector';
 import './CreateAdvert.css'
 import TextArea from 'antd/es/input/TextArea';
@@ -19,56 +18,79 @@ import { filterTree } from '../../../helpers/common-methods';
 import '../../search/Search.css'
 import { AdvertModel } from '../../../models/AdvertModel';
 import Error from '../../Error'
+import { filterService } from '../../../services/filterService';
+import { imagesUrl } from '../../../helpers/constants';
+import { ImageModel } from '../../../models/ImageModel';
+
 
 
 const CreateAdvert: React.FC = () => {
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const id = Number(searchParams.get("id")) | NaN 
+  const id = Number(searchParams.get("id"))
   const [files, setFiles] = useState<UploadFile[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<CategoryModel>();
-  const [priceStatus, setPriceStatus] = useState<boolean>(true);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
+  const [priceFree, setPriceFree] = useState<boolean>(false);
   const [treeElements, setTreeElements] = useState<TreeElement[]>([]);
-  const [isNew, setIsNew] = useState<boolean>(true);
-  const [isVip, setIsVip] = useState<boolean>(true);
   const [publishing, setPublishing] = useState<boolean>(false);
   const [filterValues, setFilterValues] = useState<FilterData[]>([]);
-  const [contractPrice, setContractPrice] = useState<boolean>(false);
   const [editAdvert, setEditAdvert] = useState<AdvertModel>();
   const [error, setError] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     (async () => {
-      let advert = undefined;
       const areas = await areaService.getAll();
       if (areas.status === 200) {
         var elements = areas.data.map(x => ({ id: -x.id, value: -x.id, title: x.name, pId: 0, selectable: false, key: -x.id }))
         setTreeElements(elements);
       }
-     console.log(id)
-      if (id) {
-        advert = await advertService.getById(id)
-        if (advert?.status === 200) {
-          setEditAdvert(advert.data)
-        }else{
-          setError(true);
-        }
+      if (!isNaN(id) && id !== 0) {
+        await setAdvertData();
       }
+      setError(isNaN(id) || areas.status !== 200)
       setLoading(false)
-     
+
     })()
   }, []);
 
+  const setAdvertData = async () => {
+    const [images, filters, advert] = await Promise.all([
+      advertService.getImages(id),
+      filterService.getAdvertFilterValues(id),
+      advertService.getById(id),
+    ]);
+
+    if (advert?.status === 200) {
+      setEditAdvert(advert.data)
+      setSelectedCategoryId(advert.data.categoryId)
+      setPriceFree(advert.data.price === 0)
+      if (filters.status === 200) {
+        setFilterValues(filters.data.map(x => ({ id: x.id, filterId: x.filterId }) as FilterData))
+      }
+
+      if (images.status === 200) {
+        setFiles(images.data
+          .sort((a: ImageModel, b: ImageModel) => { return a.priority - b.priority })
+          .map(x => ({ url: imagesUrl + "/1200_" + x.name, originFileObj: new File([new Blob([''])],x.name,{ type: 'old-image'})}) as UploadFile))
+      }
+
+      const areaCities = await cityService.getByAreaId(advert.data.areaId)
+      if (areaCities.status === 200) {
+        var cities = areaCities.data.map(x => ({ id: x.id, value: x.id, title: x.name, selectable: true, pId: advert.data.areaId, key: x.id }))
+        setTreeElements([...treeElements, ...cities]);
+      }
+    } else {
+      setError(true)
+    }
+  }
 
   const onFinish = async (advert: AdvertCreationModel) => {
     setPublishing(true);
-    advert.isContractPrice = contractPrice;
-    advert.categoryId = selectedCategory?.id || 0;
+    console.log(files)
+    advert.id = !isNaN(id) ? id : 0
     advert.userId = user.id;
-    advert.isNew = isNew;
-    advert.isVip = isVip;
     var formData = new FormData();
     Object.keys(advert).forEach(function (key) {
       if (key === 'imageFiles') {
@@ -86,11 +108,18 @@ const CreateAdvert: React.FC = () => {
         }
       }
     });
-    var result = await advertService.create(formData)
-    if (result.status === 200) {
-      message.success('Оголошення успішно опубліковано');
-      navigate(-1)
+    if(advert.id === 0){
+      var create = await advertService.create(formData)
+      if (create.status === 200) {
+        message.success('Оголошення успішно опубліковано');
+      }
+    }else{
+      var update = await advertService.update(formData)
+      if (update.status === 200) {
+        message.success('Оголошення успішно оновлено');
+      }
     }
+    navigate(-1) 
     setPublishing(false);
   }
 
@@ -110,17 +139,24 @@ const CreateAdvert: React.FC = () => {
 
   return (
     <>
-    <Spin spinning={loading} size='large' fullscreen/>
+      <Spin spinning={loading} size='large' fullscreen />
       {!error && !loading &&
-         <div className=' w-70 mx-auto d-flex flex-column align-items-start'>
+        <div className=' w-70 mx-auto d-flex flex-column align-items-start'>
           <h2 className='my-3 fw-bold'>Створити оголошення</h2>
           <Form
             layout='vertical'
             initialValues={{
-              remember: true,
-              phoneNumber: user.phoneNumber,
-              contactEmail: user.email,
-              contactPersone: user.name + ' ' + user.surname
+              phoneNumber: editAdvert ? editAdvert.phoneNumber : user.phoneNumber,
+              contactEmail: editAdvert ? editAdvert.contactEmail : user.email,
+              contactPersone: editAdvert ? editAdvert.contactPersone : user.name + ' ' + user.surname,
+              title: editAdvert ? editAdvert.title : '',
+              categoryId: editAdvert ? editAdvert.categoryId : undefined,
+              description: editAdvert ? editAdvert.description : undefined,
+              isNew: editAdvert ? editAdvert.isNew : true,
+              isVip: editAdvert ? editAdvert.isVip : true,
+              isContrectPrice: editAdvert ? editAdvert.isContractPrice : false,
+              price: editAdvert ? editAdvert.price : undefined,
+              cityId: editAdvert ? editAdvert.cityId : undefined,
             }}
             onFinish={onFinish}
             className='w-100' >
@@ -151,6 +187,7 @@ const CreateAdvert: React.FC = () => {
               <Form.Item
                 hasFeedback
                 name="categoryId"
+                valuePropName='categoryId'
                 label={<h6>Категорія</h6>}
                 rules={[
                   {
@@ -159,11 +196,11 @@ const CreateAdvert: React.FC = () => {
                   },
                 ]}
               >
-                <CategorySelector category={selectedCategory} onChange={setSelectedCategory} />
+                <CategorySelector categoryId={selectedCategoryId} onChange={setSelectedCategoryId} />
               </Form.Item>
             </div>
 
-            {selectedCategory &&
+            {selectedCategoryId !== 0 &&
               <div className='white-container'>
                 <Form.Item
                   name="filterValues"
@@ -173,7 +210,7 @@ const CreateAdvert: React.FC = () => {
                     values={filterValues}
                     child={false}
                     onChange={setFilterValues}
-                    categoryId={selectedCategory.id} />
+                    categoryId={selectedCategoryId} />
                 </Form.Item>
               </div>}
 
@@ -220,28 +257,30 @@ const CreateAdvert: React.FC = () => {
 
             <div className='white-container'>
               <h4>Додаткова інформація</h4>
-              <div className='d-flex flex-column gap-1'>
-                <h6>Стан</h6>
-                <Radio.Group defaultValue="new" onChange={(e) => setIsNew(e.target.value === 'new')} size="large" buttonStyle="solid">
-                  <Radio.Button value="new">Нове</Radio.Button>
-                  <Radio.Button value="old">Вживане</Radio.Button>
+              <Form.Item
+                name='isNew'
+                label={<h6>Стан</h6>}>
+                <Radio.Group size="large" buttonStyle="solid">
+                  <Radio.Button value={true}>Нове</Radio.Button>
+                  <Radio.Button value={false}>Вживане</Radio.Button>
                 </Radio.Group>
-              </div>
-              <div className='d-flex flex-column gap-1'>
-                <h6>Статус</h6>
-                <Radio.Group defaultValue="vip" onChange={(e) => setIsVip(e.target.value === 'vip')} size="large" buttonStyle="solid">
-                  <Radio.Button value="vip">VIP оголошення</Radio.Button>
-                  <Radio.Button value="normal">Звичайне</Radio.Button>
+              </Form.Item>
+              <Form.Item
+                name='isVip'
+                label={<h6>Статус</h6>}>
+                <Radio.Group size="large" buttonStyle="solid">
+                  <Radio.Button value={true}>VIP оголошення</Radio.Button>
+                  <Radio.Button value={false}>Звичайне</Radio.Button>
                 </Radio.Group>
-              </div>
+              </Form.Item>
             </div>
 
             <div className='white-container'>
-              <Radio.Group defaultValue="price" onChange={(e) => setPriceStatus(e.target.value === 'price')} size="large" buttonStyle="solid">
-                <Radio.Button value="price">Ціна</Radio.Button>
-                <Radio.Button value="free">Безкоштовно</Radio.Button>
+              <Radio.Group defaultValue={priceFree} onChange={(e)=>setPriceFree(e.target.value)} size="large" buttonStyle="solid">
+                <Radio.Button value={false}>Ціна</Radio.Button>
+                <Radio.Button value={true}>Безкоштовно</Radio.Button>
               </Radio.Group>
-              {priceStatus &&
+              {!priceFree &&
                 <>
                   <Form.Item
                     name='price'
@@ -254,10 +293,15 @@ const CreateAdvert: React.FC = () => {
                     ]}>
                     <InputNumber className='no-border no-border-container' addonAfter="грн." size='large' />
                   </Form.Item>
-                  <div style={{ width: 250 }} className='d-flex justify-content-between' >
+                  <Form.Item
+                    name='isContrectPrice'
+                    label={<h6>Договірна</h6>}>
+                    <Switch className=' d-inline' defaultValue={false} />
+                  </Form.Item>
+                  {/* <div style={{ width: 250 }} className='d-flex justify-content-between' >
                     <h6>Договірна</h6>
                     <Switch defaultValue={false} onChange={setContractPrice} />
-                  </div>
+                  </div> */}
                 </>
               }
             </div>
@@ -367,11 +411,11 @@ const CreateAdvert: React.FC = () => {
             </div>
           </Form>
         </div>}
-        { !loading && error && <Error
-          status="500"
-          title="Упс...виникла помилка"
-          subTitle="Помилка звантаження інформації"
-        />}
+      {!loading && error && <Error
+        status="500"
+        title="Упс...виникла помилка"
+        subTitle="Помилка звантаження інформації"
+      />}
     </>
   )
 }

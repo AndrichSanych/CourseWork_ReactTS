@@ -19,7 +19,7 @@ export interface SearchProps {
 }
 
 export interface CategoryViewProps {
-    category: CategoryModel
+    category?: CategoryModel
     onClick?: Function
 }
 
@@ -95,6 +95,6 @@ export interface FavoriteButtonProps{
 }
 
 export interface CategorySelectorProps {
-    category?: CategoryModel
+    categoryId?: number
     onChange?: Function
 }

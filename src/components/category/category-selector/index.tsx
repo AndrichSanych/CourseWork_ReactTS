@@ -5,7 +5,7 @@ import { CategoryModel } from "../../../models/CategoryModel";
 import { categoryService } from "../../../services/categoryService";
 import { CategorySelectorProps } from "../../../models/Props";
 
-const CategorySelector: React.FC<CategorySelectorProps> = ({ category, onChange = () => { } }) => {
+const CategorySelector: React.FC<CategorySelectorProps> = ({ categoryId, onChange = () => { } }) => {
     const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
     const [categories, setCategories] = useState<CategoryModel[]>([]);
 
@@ -16,7 +16,6 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({ category, onChange 
                 setCategories(result.data)
             }
         })()
-
     }, [])
 
     const showModal = () => {
@@ -25,7 +24,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({ category, onChange 
 
     const handleClick = (id: number) => {
         setIsCategoryModalOpen(false);
-        onChange(categories.find(x => x.id === id))
+        onChange(id)
     };
 
     const handleClose = () => {
@@ -33,8 +32,8 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({ category, onChange 
     };
     return (
         <>
-            <div className={`${category ? '' : 'p-4'} gap-3  rounded-2 d-inline-flex bg-secondary-subtle`}>
-                {category ? <CategoryView category={category} /> : <h5>Оберіть категорію</h5>}
+            <div className={`${categoryId ? '' : 'p-4'} gap-3  rounded-2 d-inline-flex bg-secondary-subtle`}>
+                {categoryId ? <CategoryView category={categories.find(x=>x.id === categoryId)} /> : <h5>Оберіть категорію</h5>}
                 <Button className='fs-6 align-self-center' onClick={showModal} type='link'>Змінити</Button>
             </div>
             <Modal

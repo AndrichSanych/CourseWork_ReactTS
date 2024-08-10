@@ -1,6 +1,5 @@
 import axios from "axios";
 import { AdvertModel } from "../models/AdvertModel";
-import { AdvertCreationModel } from "../models/AdvertCreationModel";
 import { formPostConfig} from "../helpers/constants";
 import { SearchResultModel } from "../models/SearchResultModel";
 import { ImageModel } from "../models/ImageModel";
@@ -17,7 +16,7 @@ export const advertService = {
     getByIDs: (ids: number[]) => TryError<AdvertModel[]>( ()=> axios.post<AdvertModel[]>(advertAPIUrl + `/adverts`,ids)),
     getRandomVip: (count: number)=> TryError<AdvertModel[]>( () => axios.get<AdvertModel[]>(advertAPIUrl + `/vip/${count}`)),
     create: (model: FormData) => TryError( ()=> axios.post(advertAPIUrl + `/create`,model,formPostConfig)),
-    update: (model: AdvertCreationModel) => TryError( ()=> axios.put(advertAPIUrl + `/update`,model,formPostConfig)),
+    update: (model: FormData) => TryError( ()=> axios.put(advertAPIUrl + `/update`,model,formPostConfig)),
     delete: (id: number) => TryError( ()=> axios.delete(advertAPIUrl + `/delete/${id}`)),
 
 }
