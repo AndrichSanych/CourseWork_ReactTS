@@ -7,8 +7,6 @@ import user from '../../../stores/UserStore'
 import { storageService } from '../../../services/storangeService'
 import { advertService } from '../../../services/advertService'
 
-
-
 const FavoriteAdverts: React.FC = () => {
   const [advertTableData, setAdvertTableData] = useState<TableData>(({
     page: 1,

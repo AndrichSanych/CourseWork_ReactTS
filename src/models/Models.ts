@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface TreeElement {
     id: number;
     value: number;
@@ -27,4 +29,11 @@ export interface LocalFavoriteModel {
     id: number
     price: number
     date: string
+}
+
+export interface MenuItem {
+    label: ReactNode
+    key: string
+    icon: ReactNode
+    users: string[]
 }

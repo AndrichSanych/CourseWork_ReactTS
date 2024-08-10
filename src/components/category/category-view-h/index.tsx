@@ -1,8 +1,8 @@
 import React from 'react'
 import { Avatar } from 'antd';
 import { CategoryViewProps } from '../../../models/Props';
+import { imagesUrl } from '../../../helpers/constants';
 
-const imagesUrl = (process.env.REACT_APP_SERVER_HOST || '') + process.env.REACT_APP_IMAGES_FOLDER;
 const CategoryView: React.FC<CategoryViewProps> = ({category,onClick}) => {
   return (
     <div onClick={onClick?()=>onClick(category.id):()=>{}}

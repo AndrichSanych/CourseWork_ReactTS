@@ -1,16 +1,11 @@
-import { Button, Modal } from "antd"
+import { Button, Col, Modal, Row } from "antd"
 import CategoryView from "../category-view-h"
 import { useEffect, useState } from "react";
-import CategoriesGrid from "../categories-grid";
 import { CategoryModel } from "../../../models/CategoryModel";
 import { categoryService } from "../../../services/categoryService";
+import { CategorySelectorProps } from "../../../models/Props";
 
-interface CategorySelectorProps {
-    category?: CategoryModel
-    onChange?:Function
-}
-
-const CategorySelector: React.FC<CategorySelectorProps> = ({ category,onChange = ()=>{} }) => {
+const CategorySelector: React.FC<CategorySelectorProps> = ({ category, onChange = () => { } }) => {
     const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
     const [categories, setCategories] = useState<CategoryModel[]>([]);
 
@@ -52,7 +47,21 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({ category,onChange =
                 width={'80%'}
                 okButtonProps={{ hidden: true }} >
 
-                <CategoriesGrid categories={categories} handleClick={handleClick} />
+                <Row className='p-3' gutter={[16, 16]}>
+                    {categories && categories.map((x, index) =>
+                        <Col
+                            sm={{ span: 16 }}
+                            md={{ span: 10 }}
+                            lg={{ span: 8 }}
+                            xl={{ span: 6 }}
+                            key={index}>
+                            <div className='category-view rounded-3'>
+                                <CategoryView category={x} onClick={ handleClick} />
+                            </div>
+
+                        </Col>
+                    )}
+                </Row>
             </Modal>
         </>
     )

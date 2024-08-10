@@ -2,14 +2,11 @@ import React from 'react'
 import { AdvertViewProps } from '../../../../models/Props'
 import { Card } from 'react-bootstrap';
 import FavoriteButton from '../../../favorite-button';
+import { DateTime } from '../../../../helpers/DateTime';
+import { imagesUrl } from '../../../../helpers/constants';
 
-const imagesUrl = (process.env.REACT_APP_SERVER_HOST || '') + process.env.REACT_APP_IMAGES_FOLDER;
 const VipAdvertCard: React.FC<AdvertViewProps> = ({ advert, onClick = () => { } }) => {
-
-    const date = new Date(advert.date.split('T')[0]);
-    const time = advert.date.split('T')[1].slice(0, 5)
-    const today = date.getDate() === new Date(Date.now()).getDate()
-
+    const date = new DateTime(advert.date);
     return (
         <Card className='advert-view h-100' onClick={() => onClick(advert.id)}>
             <Card.Img src={imagesUrl + "/200_" + advert.firstImage} alt={advert.firstImage} style={{ objectFit: "cover", aspectRatio: "16/12" }} />
@@ -27,9 +24,9 @@ const VipAdvertCard: React.FC<AdvertViewProps> = ({ advert, onClick = () => { } 
                     </div>
                     <div className='d-flex flex-column text-start mt-auto'>
                         <span>{advert.cityName}</span>
-                        {today
-                            ? <span>Сьогодні о {time}</span>
-                            : <span>{date.toLocaleDateString('ua-UA')}</span>}
+                        {date.isToday
+                            ? <span>Сьогодні о {date.getTime}</span>
+                            : <span>{date.getDate}</span>}
                     </div>
                 </div>
             </Card.Body>

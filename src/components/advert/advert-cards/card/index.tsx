@@ -3,11 +3,18 @@ import { AdvertViewProps } from '../../../../models/Props'
 import { Card } from 'react-bootstrap';
 import FavoriteButton from '../../../favorite-button';
 import { Tag } from 'antd';
-const imagesUrl = (process.env.REACT_APP_SERVER_HOST || '') + process.env.REACT_APP_IMAGES_FOLDER;
-const AdvertCard: React.FC<AdvertViewProps> = ({ advert, onClick = () => { } ,onFavoriteChange=()=>{}}) => {
-    const date = new Date(advert.date.split('T')[0]);
-    const time = advert.date.split('T')[1].slice(0, 5)
-    const today = date.getDate() === new Date(Date.now()).getDate()
+import { EditOutlined } from '@ant-design/icons';
+import  {DateTime} from '../../../../helpers/DateTime'
+import { imagesUrl } from '../../../../helpers/constants';
+
+const AdvertCard: React.FC<AdvertViewProps> = ({ advert, onClick = () => { }, onEdit, onFavoriteChange = () => { } }) => {
+    const date = new DateTime(advert.date);
+    const onCardEdit = (e: any) => {
+        e.stopPropagation();
+        if (onEdit) {
+            onEdit(advert.id)
+        }
+    }
     return (
         <Card className='advert-view  h-100' onClick={() => onClick(advert.id)}>
             <Card.Img src={imagesUrl + "/200_" + advert.firstImage} alt={advert.firstImage} style={{ objectFit: "cover", aspectRatio: "16/13", padding: 15 }} />
@@ -26,16 +33,19 @@ const AdvertCard: React.FC<AdvertViewProps> = ({ advert, onClick = () => { } ,on
                     </div>
                     <div className='d-flex  gap-2 text-start mt-auto'>
                         <span>{advert.areaName} обл. {advert.cityName} -</span>
-                        {today
-                            ? <span>Сьогодні о {time}</span>
-                            : <span>{date.toLocaleDateString('ua-UA')}</span>}
+                        {date.isToday
+                            ? <span>Сьогодні о {date.getTime}</span>
+                            : <span>{date.getDate}</span>}
                     </div>
                     <div className='d-flex justify-content-between text-start'>
                         <div style={{ marginBottom: 10 }} className='d-flex flex-column'>
                             <span style={{ fontSize: 19 }}>{advert.price === 0 ? 'Безкоштовно' : advert.price + ' грн.'} </span>
                             {advert.isContractPrice ? <span style={{ fontSize: 14, color: 'gray', fontWeight: 'lighter' }}>Договірна</span> : ''}
                         </div>
-                        <FavoriteButton advert={advert} onChange={onFavoriteChange}/>
+                        {onEdit
+                            ? <EditOutlined className='ms-3 fs-4 text-danger' onClick={onCardEdit}/>
+                            : <FavoriteButton advert={advert} onChange={onFavoriteChange} />
+                        }
                     </div>
                 </div>
             </Card.Body>

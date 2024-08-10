@@ -4,7 +4,7 @@ import { Row } from 'antd'
 
 
 
-const DivabledRow: React.FC<DisabledRowProps> = ({ enabled, children }) => {
+const DisabledRow: React.FC<DisabledRowProps> = ({ enabled, children }) => {
   return (
     <>
       {enabled
@@ -15,4 +15,4 @@ const DivabledRow: React.FC<DisabledRowProps> = ({ enabled, children }) => {
   )
 }
 
-export default DivabledRow
+export default DisabledRow

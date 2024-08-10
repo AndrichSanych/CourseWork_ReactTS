@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { CategoryModel } from '../../models/CategoryModel';
 import { categoryService } from '../../services/categoryService';
 import { AdvertModel } from '../../models/AdvertModel';
-import axios from 'axios';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { getQueryString, setQueryParams } from '../../helpers/common-methods';
 import { AdvertSearchModel } from '../../models/FilterModel';
@@ -15,9 +14,7 @@ import { Spin } from 'antd';
 import { emptyFilter, paginatorConfig } from '../../helpers/constants';
 import AdvertTable from '../advert/advert-table';
 
-
 const HomePage: React.FC = () => {
-
   const setFilterFromQuery = () => {
     if (location.pathname === '/') {
       return emptyFilter;
@@ -83,10 +80,7 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      const [categs] = await axios.all(
-        [
-          categoryService.getAll(),
-        ])
+      const categs = await categoryService.getAll()
       if (categs?.status === 200)
         setCategories(categs.data)
     })()

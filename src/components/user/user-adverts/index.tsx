@@ -5,6 +5,7 @@ import { AdvertModel } from '../../../models/AdvertModel'
 import user from '../../../stores/UserStore'
 import { advertService } from '../../../services/advertService'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const UserAdverts :React.FC= () => {
   const [advertTableData, setAdvertTableData] = useState<TableData>(({
@@ -14,6 +15,7 @@ const UserAdverts :React.FC= () => {
   }));
   const [total, setTotal] = useState<number>(0)
   const [adverts, setAdverts] = useState<AdvertModel[]>([])
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadData()
@@ -52,7 +54,8 @@ const UserAdverts :React.FC= () => {
           total={total}
           adverts={adverts}
           onChange={onChange}
-          sortIndex={advertTableData.sortIndex} />
+          sortIndex={advertTableData.sortIndex} 
+          onEdit={(id:number)=>navigate(`/create-advert?id=${id}`)}/>
       </div>
     </>
   )

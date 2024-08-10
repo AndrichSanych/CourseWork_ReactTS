@@ -1,7 +1,7 @@
 import { Avatar } from 'antd'
 import React from 'react'
 import { CategoryViewProps } from '../../../models/Props'
-const imagesUrl = (process.env.REACT_APP_SERVER_HOST || '') + process.env.REACT_APP_IMAGES_FOLDER;
+import { imagesUrl } from '../../../helpers/constants'
 
 const CategoryViewVertical: React.FC<CategoryViewProps> = ({category,onClick})=> {
   return (
