@@ -28,7 +28,7 @@ export const Login: React.FC = () => {
     }
     return (
         <>
-        <div className=' w-70 mx-auto mt-4'>
+        <div className=' w-70 mx-auto my-4'>
             <BackButton />
         </div>
            

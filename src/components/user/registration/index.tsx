@@ -47,7 +47,7 @@ export const Registration: React.FC = () => {
 
       <BackButton />
       
-      <div className=' w-75 mx-auto d-flex flex-column align-items-center'>
+      <div className=' w-75 mx-auto d-flex flex-column mb-4 align-items-center'>
         <Divider className='fs-3  mb-5' orientation="left">Реєстрація</Divider>
         <Upload
               listType="picture-circle"
@@ -149,7 +149,7 @@ export const Registration: React.FC = () => {
           <Form.Item
 
             label="Телефон"
-            name="phoneNumbe"
+            name="phoneNumber"
             rules={[
               {
                 pattern: RegExp('^\\d{3}[-\\s]{1}\\d{3}[-\\s]{1}\\d{2}[-\\s]{0,1}\\d{2}$'),

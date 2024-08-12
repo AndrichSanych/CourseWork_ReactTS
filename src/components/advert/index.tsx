@@ -154,7 +154,7 @@ const AdvertPage: React.FC = () => {
                   <div className="p-4 rounded  bg-white w-100">
                     <h5 className='mb-4'>Користувач</h5>
                     <div className='d-flex gap-3 align-content-center align-items-center'>
-                      <Avatar size={60} src={imagesUrl + '/400_' + user?.avatar} />
+                      <Avatar size={60} src={user? imagesUrl + '/400_' + user?.avatar :''} />
                       <div className='d-flex flex-column'>
                         <span style={{ fontSize: 22 }}>{advert.contactPersone}</span>
                         <span style={{ fontSize: 16 }}>На Olx з {usertDate?.getDate}</span>

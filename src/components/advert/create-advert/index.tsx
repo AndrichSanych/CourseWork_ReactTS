@@ -10,7 +10,7 @@ import { SmileOutlined } from '@ant-design/icons';
 import { cityService } from '../../../services/cityService';
 import { CityModel } from '../../../models/CityModel';
 import { advertService } from '../../../services/advertService';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import user from '../../../stores/UserStore'
 import { FilterData, TreeElement } from '../../../models/Models';
 import Filters from '../../filters';
@@ -21,11 +21,12 @@ import Error from '../../Error'
 import { filterService } from '../../../services/filterService';
 import { imagesUrl } from '../../../helpers/constants';
 import { ImageModel } from '../../../models/ImageModel';
+import { useForm } from 'antd/es/form/Form';
 
 
 
 const CreateAdvert: React.FC = () => {
-
+  const location = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const id = Number(searchParams.get("id"))
@@ -38,6 +39,7 @@ const CreateAdvert: React.FC = () => {
   const [editAdvert, setEditAdvert] = useState<AdvertModel>();
   const [error, setError] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(true)
+  const [form] = Form.useForm();
 
   useEffect(() => {
     (async () => {
@@ -54,6 +56,12 @@ const CreateAdvert: React.FC = () => {
 
     })()
   }, []);
+
+  useEffect(() => {
+    if (id === 0 && editAdvert) {
+      window.location.reload();
+    }
+  }, [id])
 
   const setAdvertData = async () => {
     const [images, filters, advert] = await Promise.all([
@@ -73,7 +81,7 @@ const CreateAdvert: React.FC = () => {
       if (images.status === 200) {
         setFiles(images.data
           .sort((a: ImageModel, b: ImageModel) => { return a.priority - b.priority })
-          .map(x => ({ url: imagesUrl + "/1200_" + x.name, originFileObj: new File([new Blob([''])],x.name,{ type: 'old-image'})}) as UploadFile))
+          .map(x => ({ url: imagesUrl + "/1200_" + x.name, originFileObj: new File([new Blob([''])], x.name, { type: 'old-image' }) }) as UploadFile))
       }
 
       const areaCities = await cityService.getByAreaId(advert.data.areaId)
@@ -88,7 +96,6 @@ const CreateAdvert: React.FC = () => {
 
   const onFinish = async (advert: AdvertCreationModel) => {
     setPublishing(true);
-    console.log(files)
     advert.id = !isNaN(id) ? id : 0
     advert.userId = user.id;
     var formData = new FormData();
@@ -108,18 +115,18 @@ const CreateAdvert: React.FC = () => {
         }
       }
     });
-    if(advert.id === 0){
+    if (advert.id === 0) {
       var create = await advertService.create(formData)
       if (create.status === 200) {
         message.success('Оголошення успішно опубліковано');
       }
-    }else{
+    } else {
       var update = await advertService.update(formData)
       if (update.status === 200) {
         message.success('Оголошення успішно оновлено');
       }
     }
-    navigate(-1) 
+    navigate(-1)
     setPublishing(false);
   }
 
@@ -142,8 +149,9 @@ const CreateAdvert: React.FC = () => {
       <Spin spinning={loading} size='large' fullscreen />
       {!error && !loading &&
         <div className=' w-70 mx-auto d-flex flex-column align-items-start'>
-          <h2 className='my-3 fw-bold'>Створити оголошення</h2>
+          <h2 className='mt-4 fw-bold'>Створити оголошення</h2>
           <Form
+            form={form}
             layout='vertical'
             initialValues={{
               phoneNumber: editAdvert ? editAdvert.phoneNumber : user.phoneNumber,
@@ -154,12 +162,13 @@ const CreateAdvert: React.FC = () => {
               description: editAdvert ? editAdvert.description : undefined,
               isNew: editAdvert ? editAdvert.isNew : true,
               isVip: editAdvert ? editAdvert.isVip : true,
-              isContrectPrice: editAdvert ? editAdvert.isContractPrice : false,
+              isContractPrice: editAdvert ? editAdvert.isContractPrice : false,
               price: editAdvert ? editAdvert.price : undefined,
               cityId: editAdvert ? editAdvert.cityId : undefined,
+              imageFiles: files
             }}
             onFinish={onFinish}
-            className='w-100' >
+            className='w-100 my-4' >
             <div className='white-container'>
               <h4>Опишіть у подробицях</h4>
               <Form.Item
@@ -276,7 +285,7 @@ const CreateAdvert: React.FC = () => {
             </div>
 
             <div className='white-container'>
-              <Radio.Group defaultValue={priceFree} onChange={(e)=>setPriceFree(e.target.value)} size="large" buttonStyle="solid">
+              <Radio.Group defaultValue={priceFree} onChange={(e) => setPriceFree(e.target.value)} size="large" buttonStyle="solid">
                 <Radio.Button value={false}>Ціна</Radio.Button>
                 <Radio.Button value={true}>Безкоштовно</Radio.Button>
               </Radio.Group>
@@ -294,14 +303,10 @@ const CreateAdvert: React.FC = () => {
                     <InputNumber className='no-border no-border-container' addonAfter="грн." size='large' />
                   </Form.Item>
                   <Form.Item
-                    name='isContrectPrice'
+                    name='isContractPrice'
                     label={<h6>Договірна</h6>}>
                     <Switch className=' d-inline' defaultValue={false} />
                   </Form.Item>
-                  {/* <div style={{ width: 250 }} className='d-flex justify-content-between' >
-                    <h6>Договірна</h6>
-                    <Switch defaultValue={false} onChange={setContractPrice} />
-                  </div> */}
                 </>
               }
             </div>
