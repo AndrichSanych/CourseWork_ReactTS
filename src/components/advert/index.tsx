@@ -88,9 +88,9 @@ const AdvertPage: React.FC = () => {
                       infinite={true}
                       draggable={false} >
                       {images.map(x =>
-                        <div className='text-center' >
+                        <div key={x.id} className='text-center' >
                           <Image
-                            key={x.id}
+                            
                             height={600}
                             src={imagesUrl + "/1200_" + x.name}
                             alt={x.name}
@@ -104,6 +104,7 @@ const AdvertPage: React.FC = () => {
                     <div className='d-flex flex-wrap gap-2'>
                       {advertFilterValues.map(x =>
                         <Tag
+                          key={x.id}
                           style={{
                             fontSize: 16,
                             padding: 8,

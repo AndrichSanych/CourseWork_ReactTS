@@ -303,9 +303,10 @@ const CreateAdvert: React.FC = () => {
                     <InputNumber className='no-border no-border-container' addonAfter="грн." size='large' />
                   </Form.Item>
                   <Form.Item
+                    valuePropName='checked'
                     name='isContractPrice'
                     label={<h6>Договірна</h6>}>
-                    <Switch className=' d-inline' defaultValue={false} />
+                    <Switch className=' d-inline' />
                   </Form.Item>
                 </>
               }
@@ -367,8 +368,7 @@ const CreateAdvert: React.FC = () => {
                   className='p-2 no-border no-border-container'
                   placeholder="Контактна особа"
                   showCount minLength={3}
-                  maxLength={56}
-                  defaultValue={user.name + ' ' + user.surname} />
+                  maxLength={56} />
               </Form.Item>
 
               <Form.Item
