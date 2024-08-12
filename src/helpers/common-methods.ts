@@ -54,7 +54,7 @@ export const setQueryParams = (searchParams: URLSearchParams,params:any)=>{
 export const filterTree: boolean | ((inputValue: string, treeNode: DefaultOptionType) => boolean) | undefined = (search:string, item:DefaultOptionType):boolean => {
   var res = false;
   if (item.title) {
-      res = item.title?.toLocaleString()?.toLocaleLowerCase()?.indexOf(search.toLowerCase()) >= 0;
+      res = item.title?.toLowerCase()?.indexOf(search.toLowerCase()) >= 0;
   }
   return res;
 } 

@@ -148,6 +148,7 @@ footer {
 .advert-view {
   width: 100%;
   transition: all 0.2s ease-in-out;
+  cursor: pointer;
 }
 
 .advert-view:hover {

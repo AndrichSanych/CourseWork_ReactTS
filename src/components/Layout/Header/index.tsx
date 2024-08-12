@@ -1,5 +1,5 @@
 // src/components/Header.tsx
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, {  useEffect, useState } from 'react';
 import logo from '../../../logo.png';
 import { DownOutlined, FlagOutlined, HeartOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Dropdown } from 'antd';
@@ -7,13 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import user from '../../../stores/UserStore'
 import { storageService } from '../../../services/storangeService';
-
-interface MenuItem {
-    label: ReactNode
-    key: string
-    icon: ReactNode
-    users: string[]
-}
+import { MenuItem } from '../../../models/Models';
 
 const Header: React.FC = observer(() => {
     const navigate = useNavigate();

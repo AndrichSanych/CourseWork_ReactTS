@@ -4,7 +4,6 @@ import CategoryViewVertical from '../../category/category-view-v'
 import VipAdvertCard from '../../advert/advert-cards/vip-card'
 import { StartContentProps } from '../../../models/Props'
 import { AdvertModel } from '../../../models/AdvertModel'
-import axios from 'axios'
 import { advertService } from '../../../services/advertService'
 import { useNavigate } from 'react-router-dom'
 
@@ -13,10 +12,7 @@ const StartContent: React.FC<StartContentProps> = ({ categories, onCategorySelec
   const navigate = useNavigate();
   useEffect(() => {
     (async () => {
-      const [vips] = await axios.all(
-        [
-          advertService.getRandomVip(12)
-        ])
+      const vips = await advertService.getRandomVip(12);
       if (vips?.status === 200)
         setVipAdverts(vips.data)
     })()

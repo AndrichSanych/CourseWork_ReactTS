@@ -8,7 +8,7 @@ import { TableOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import '../../search/Search.css'
 import HorisontalAdvertCard from '../advert-cards/horizontal-card'
 
-const AdvertTable: React.FC<AdvertTableProps> = ({ loading, adverts = [], page, title, total = 0, sortIndex, pageSize, onChange = () => { }, onAdvertChange = () => { } }) => {
+const AdvertTable: React.FC<AdvertTableProps> = ({onEdit, loading, adverts = [], page, title, total = 0, sortIndex, pageSize, onChange = () => { }, onAdvertChange = () => { } }) => {
     const navigate = useNavigate();
     const [tableStyle, setTableStyle] = useState<boolean>(false)
 
@@ -39,7 +39,6 @@ const AdvertTable: React.FC<AdvertTableProps> = ({ loading, adverts = [], page, 
     return (
         <div className='d-flex h-100 flex-column gap-2 w-70 mx-auto'>
             <Divider orientation='left' style={{ borderColor: 'gray', fontSize: 18 }}>{title}</Divider>
-
             {adverts.length > 0
                 ?
                 <>
@@ -83,17 +82,19 @@ const AdvertTable: React.FC<AdvertTableProps> = ({ loading, adverts = [], page, 
                                         key={x.id}
                                         onFavoriteChange={onAdvertChange}
                                         advert={x}
-                                        onClick={(id: number) => navigate(`/advert?id=${id}`)} />
+                                        onClick={(id: number) => navigate(`/advert?id=${id}`)} 
+                                        onEdit={onEdit}/>
                                 </Col>)}
-
                         </Row>
+                        
                         : <div className='d-flex flex-column gap-2'>
                             {adverts.map(x =>
                                 <HorisontalAdvertCard
                                     key={x.id}
                                     onFavoriteChange={onAdvertChange}
                                     advert={x}
-                                    onClick={(id: number) => navigate(`/advert?id=${id}`)} />)}
+                                    onClick={(id: number) => navigate(`/advert?id=${id}`)} 
+                                    onEdit={onEdit}/>)}
                         </div>}
 
                     <Pagination

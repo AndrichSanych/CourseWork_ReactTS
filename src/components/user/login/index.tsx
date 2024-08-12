@@ -28,7 +28,7 @@ export const Login: React.FC = () => {
     }
     return (
         <>
-        <div className=' w-70 mx-auto'>
+        <div className=' w-70 mx-auto my-4'>
             <BackButton />
         </div>
            
@@ -75,7 +75,8 @@ export const Login: React.FC = () => {
                         <Input.Password  type='large' />
                     </Form.Item>
 
-                    <Form.Item>
+                    <Form.Item
+                         name='remember'>
                         <Checkbox onChange={(e: CheckboxChangeEvent) => setRemember(e.target.checked)}>Запам'ятати мене</Checkbox>
                     </Form.Item>
                     <div className='buttons-block'>

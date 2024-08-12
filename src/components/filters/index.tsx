@@ -5,9 +5,7 @@ import { filterService } from '../../services/filterService'
 import { Col, Select } from 'antd'
 import { FilterData } from '../../models/Models'
 import '../search/Search.css'
-import DivabledRow from '../common-components/DivabledRow'
-
-
+import DisabledRow from '../common-components/DisabledRow'
 
 const Filters: React.FC<AdvertFitersProps> = ({ child, categoryId, values, grayBg, onChange = () => { } }) => {
     const [categoryFilters, setCategoryFilters] = useState<AdvertFilterModel[]>([])
@@ -41,7 +39,7 @@ const Filters: React.FC<AdvertFitersProps> = ({ child, categoryId, values, grayB
 
     return (
 
-        <DivabledRow enabled={!child}>
+        <DisabledRow enabled={!child}>
             {categoryFilters.map((catFilter, index) =>
                 <Col
                     sm={{ span: 24 }}
@@ -66,7 +64,7 @@ const Filters: React.FC<AdvertFitersProps> = ({ child, categoryId, values, grayB
                     </div>
                 </Col>
             )}
-        </DivabledRow>
+        </DisabledRow>
     )
 }
 

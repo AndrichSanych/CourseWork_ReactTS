@@ -1,3 +1,5 @@
+export const imagesUrl = (process.env.REACT_APP_SERVER_HOST || '') + process.env.REACT_APP_IMAGES_FOLDER;
+
 export const formPostConfig = {
     headers: {
         'Content-type': 'multipart/form-data'

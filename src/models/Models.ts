@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface TreeElement {
     id: number;
     value: number;
@@ -19,7 +21,7 @@ export interface SearchData {
 
 export interface TableData {
     page: number
-    pageSize: number
+    count: number
     sortIndex: number | undefined
 }
 
@@ -27,4 +29,11 @@ export interface LocalFavoriteModel {
     id: number
     price: number
     date: string
+}
+
+export interface MenuItem {
+    label: ReactNode
+    key: string
+    icon: ReactNode
+    users: string[]
 }

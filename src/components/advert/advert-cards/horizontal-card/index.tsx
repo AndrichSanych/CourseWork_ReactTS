@@ -2,11 +2,18 @@ import React from 'react'
 import { AdvertViewProps } from '../../../../models/Props'
 import { Tag } from 'antd';
 import FavoriteButton from '../../../favorite-button';
-const imagesUrl = (process.env.REACT_APP_SERVER_HOST || '') + process.env.REACT_APP_IMAGES_FOLDER;
-const HorisontalAdvertCard: React.FC<AdvertViewProps> = ({ advert, onClick = () => { },onFavoriteChange=()=>{} }) => {
-    const date = new Date(advert.date.split('T')[0]);
-    const time = advert.date.split('T')[1].slice(0, 5)
-    const today = date.getDate() === new Date(Date.now()).getDate()
+import { EditOutlined } from '@ant-design/icons';
+import { DateTime } from '../../../../helpers/DateTime';
+import { imagesUrl } from '../../../../helpers/constants';
+
+const HorisontalAdvertCard: React.FC<AdvertViewProps> = ({ advert, onEdit, onClick = () => { }, onFavoriteChange = () => { } }) => {
+    const date = new DateTime(advert.date);
+    const onCardEdit = (e: any) => {
+        e.stopPropagation();
+        if (onEdit) {
+            onEdit(advert.id)
+        }
+    }
     return (
         <div className='d-flex gap-2 bg-white p-2 advert-view' onClick={() => onClick(advert.id)}>
             <img
@@ -23,7 +30,7 @@ const HorisontalAdvertCard: React.FC<AdvertViewProps> = ({ advert, onClick = () 
                     <div className='d-flex justify-content-between'>
                         <span className='fs-4' >{advert.title}</span>
                         <div style={{ marginBottom: 10 }} className='d-flex gap-0 flex-column'>
-                            <span style={{ fontSize: 19,fontWeight:'bold' }}>{advert.price === 0 ? 'Безкоштовно' : advert.price + ' грн.'} </span>
+                            <span style={{ fontSize: 19, fontWeight: 'bold' }}>{advert.price === 0 ? 'Безкоштовно' : advert.price + ' грн.'} </span>
                             {advert.isContractPrice ? <span style={{ fontSize: 14, color: 'gray', fontWeight: 'lighter' }}>Договірна</span> : ''}
                         </div>
                     </div>
@@ -39,11 +46,14 @@ const HorisontalAdvertCard: React.FC<AdvertViewProps> = ({ advert, onClick = () 
                 <div className='d-flex justify-content-between'>
                     <div style={{ fontSize: 13 }} className='d-flex  gap-2 text-start mt-auto'>
                         <span>{advert.areaName} обл. {advert.cityName} -</span>
-                        {today
-                            ? <span>Сьогодні о {time}</span>
-                            : <span>{date.toLocaleDateString('ua-UA')}</span>}
+                        {date.isToday
+                            ? <span>Сьогодні о {date.getTime}</span>
+                            : <span>{date.getDate}</span>}
                     </div>
-                    <FavoriteButton advert={advert} onChange={onFavoriteChange} />
+                    {onEdit
+                        ? <EditOutlined className='ms-3 fs-4 text-danger' onClick={onCardEdit} />
+                        : <FavoriteButton advert={advert} onChange={onFavoriteChange} />
+                    }
                 </div>
             </div>
         </div>

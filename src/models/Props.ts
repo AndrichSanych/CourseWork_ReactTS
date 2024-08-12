@@ -19,7 +19,7 @@ export interface SearchProps {
 }
 
 export interface CategoryViewProps {
-    category: CategoryModel
+    category?: CategoryModel
     onClick?: Function
 }
 
@@ -27,6 +27,7 @@ export interface AdvertViewProps {
     advert: AdvertModel
     onClick?: Function
     onFavoriteChange?: Function
+    onEdit?:Function
 }
 
 export interface StartContentProps {
@@ -85,9 +86,15 @@ export interface AdvertTableProps{
     onChange?:Function
     onAdvertChange?:Function
     sortIndex?:number
+    onEdit?:Function
 }
 
 export interface FavoriteButtonProps{
     advert?:AdvertModel,
     onChange?:Function
+}
+
+export interface CategorySelectorProps {
+    categoryId?: number
+    onChange?: Function
 }

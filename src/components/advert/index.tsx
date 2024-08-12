@@ -14,8 +14,10 @@ import FavoriteButton from '../favorite-button';
 import { EnvironmentOutlined, PhoneOutlined } from '@ant-design/icons';
 import { IUser } from '../../models/User';
 import { accountService } from '../../services/accountService';
+import { DateTime } from '../../helpers/DateTime';
+import { imagesUrl } from '../../helpers/constants';
 
-const imagesUrl = (process.env.REACT_APP_SERVER_HOST || '') + process.env.REACT_APP_IMAGES_FOLDER;
+
 const AdvertPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [advert, setAdvert] = useState<AdvertModel>()
@@ -23,12 +25,11 @@ const AdvertPage: React.FC = () => {
   const [images, setImages] = useState<ImageModel[]>([])
   const id = Number(searchParams.get("id")) || undefined
   const navigate = useNavigate()
-  const date = new Date(advert?.date.split('T')[0] || '');
-  const time = advert?.date.split('T')[1].slice(0, 5)
-  const today = date.getDate() === new Date(Date.now()).getDate()
   const [error, setError] = useState<boolean>(false)
   const [showPhone, setShowPhone] = useState<boolean>(false)
   const [user, setUser] = useState<IUser>();
+  const [advertDate,setAdvertDate] = useState<DateTime>()
+  const [usertDate,setUserDate] = useState<DateTime>()
 
   useEffect(() => {
     if (!id) {
@@ -49,11 +50,13 @@ const AdvertPage: React.FC = () => {
         return
       }
       setAdvert(advert.data);
+      setAdvertDate( new DateTime(advert.data.date))
       setImages(images.data.sort((a, b) => a.priority - b.priority));
       setAdvertFilterValues(filters.data);
-      const result = await accountService.getUser(advert.data.userId);
-      if (result.status === 200) {
-        setUser(result.data)
+      const user = await accountService.getUser(advert.data.userId);
+      if (user.status === 200) {
+        setUser(user.data);
+        setUserDate(new DateTime(user.data.registerDate))
       }
     })()
   }, [id])
@@ -131,9 +134,9 @@ const AdvertPage: React.FC = () => {
                     <div className='d-flex text-start justify-content-between'>
                       <div style={{ fontSize: 13 }} className='d-flex gap-2 flex-wrap text-start'>
                         <span >{advert.areaName} обл. {advert.cityName} -</span>
-                        {today
-                          ? <span>Сьогодні о {time}</span>
-                          : <span>{date.toLocaleDateString('ua-UA')}</span>}
+                        {advertDate?.isToday
+                          ? <span>Сьогодні о {advertDate?.getTime}</span>
+                          : <span>{advertDate?.getDate}</span>}
                       </div>
                       <FavoriteButton advert={advert} />
                     </div>
@@ -151,10 +154,10 @@ const AdvertPage: React.FC = () => {
                   <div className="p-4 rounded  bg-white w-100">
                     <h5 className='mb-4'>Користувач</h5>
                     <div className='d-flex gap-3 align-content-center align-items-center'>
-                      <Avatar size={60} src={imagesUrl + '/400_' + user?.avatar} />
+                      <Avatar size={60} src={user? imagesUrl + '/400_' + user?.avatar :''} />
                       <div className='d-flex flex-column'>
                         <span style={{ fontSize: 22 }}>{advert.contactPersone}</span>
-                        <span style={{ fontSize: 16 }}>На Olx з {user?.registerDate.slice(0, 10)}</span>
+                        <span style={{ fontSize: 16 }}>На Olx з {usertDate?.getDate}</span>
                       </div>
                     </div>
                   </div>
