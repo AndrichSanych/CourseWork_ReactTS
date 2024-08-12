@@ -25,9 +25,9 @@ const HomePage: React.FC = () => {
         areaId: Number(searchParams.get("areaId")) || undefined,
         search: searchParams.get("search") || undefined,
         categoryId: Number(searchParams.get("categoryId")) || undefined,
-        isNew: Boolean(searchParams.get("isNew")) || undefined,
-        isVip: Boolean(searchParams.get("isVip")) || undefined,
-        isContractPrice: Boolean(searchParams.get("isContractPrice")) || undefined,
+        isNew: searchParams.get("isNew") ? searchParams.get("isNew") === "true" : undefined,
+        isVip: searchParams.get("isVip") ? searchParams.get("isVip") === "true" : undefined,
+        isContractPrice: searchParams.get("isContractPrice") ? searchParams.get("isContractPrice") === "true" : undefined,
         priceFrom: Number(searchParams.get("priceFrom")) || undefined,
         priceTo: Number(searchParams.get("priceTo")) || undefined,
         filterValues: searchParams.get("filterValues")
@@ -75,7 +75,7 @@ const HomePage: React.FC = () => {
         setLoading(false)
       })()
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter])
 
   useEffect(() => {
@@ -91,18 +91,18 @@ const HomePage: React.FC = () => {
     if (location.pathname === '/') {
       setFilter(emptyFilter)
     }
-    else{
-      setFilter(setFilterFromQuery())
+    else {
+       setFilter(setFilterFromQuery())
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search])
 
   const onSearch = (searchFilter: AdvertSearchModel) => {
     if (location.pathname === '/') {
       navigate(`/main-search${getQueryString(searchFilter)}`);
     }
     else {
-      setSearchParams(getQueryString(searchFilter))
+         setSearchParams(getQueryString(searchFilter))
     }
   }
 
@@ -113,6 +113,9 @@ const HomePage: React.FC = () => {
   }
 
   const onPaginationChange = (current: number, pageSize: number, sortIndex: number) => {
+    if(filter.sortIndex !== sortIndex){
+       current = paginatorConfig.pagination.defaultCurrent
+    }
     setQueryParams(searchParams, { sortIndex: sortIndex, count: pageSize, page: current })
     setSearchParams(searchParams)
   };
